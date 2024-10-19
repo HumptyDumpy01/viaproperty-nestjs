@@ -3,9 +3,10 @@ import { PropertyService } from './property.service';
 import { Property } from './property.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PropertyResolver } from './property.resolver';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   providers: [PropertyService, PropertyResolver],
-  imports: [TypeOrmModule.forFeature([Property])],
+  imports: [TypeOrmModule.forFeature([Property]), AuthModule],
 })
 export class PropertyModule {}

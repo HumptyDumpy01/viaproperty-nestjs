@@ -7,5 +7,6 @@ import { AuthResolver } from './auth.resolver';
 @Module({
   providers: [AuthService, AuthResolver],
   imports: [TypeOrmModule.forFeature([User])],
+  exports: [AuthService],
 })
 export class AuthModule {}

@@ -15,6 +15,10 @@ export class AuthService {
     private userRepository: Repository<User>,
   ) {}
 
+  async getUserData(id: string): Promise<User> {
+    return await this.userRepository.findOne({ where: { id } });
+  }
+
   async createUser(
     userInput: UserInput,
     confirmPassword: string,

@@ -9,10 +9,8 @@ export class AuthResolver {
   constructor(private authService: AuthService) {}
 
   @Query((returns) => UserType)
-  getUserData() {
-    return {
-      message: `Hello World!`,
-    };
+  getUserData(@Args('id') id: string) {
+    return this.authService.getUserData(id);
   }
 
   // example of usage (mutation)
