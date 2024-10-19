@@ -5,6 +5,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { PropertyModule } from './property/property.module';
 import { Property } from './property/property.entity';
+import { AuthModule } from './auth/auth.module';
 
 dotenv.config({
   // path to .env.config
@@ -25,6 +26,7 @@ dotenv.config({
       autoSchemaFile: true,
     }),
     PropertyModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
