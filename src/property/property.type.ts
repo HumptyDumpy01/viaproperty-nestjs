@@ -4,6 +4,7 @@ import { PropertyHas } from './object-types/property-has.object.type';
 import { ExtraPricing } from './object-types/extra-pricing.object.type';
 import { OnSale } from './object-types/on-sale.object.type';
 import { Rating } from './object-types/rating.object.type';
+import { UserType } from '../auth/user.type';
 
 @ObjectType('Property')
 export class PropertyType {
@@ -49,8 +50,11 @@ export class PropertyType {
   @Field(() => Rating)
   rating: Rating;
 
-  @Field()
-  landlord: string;
+  @Field(() => UserType)
+  landlord: UserType;
+
+  @Field(() => String)
+  landlordId: string;
 
   @Field()
   createdAt: string;

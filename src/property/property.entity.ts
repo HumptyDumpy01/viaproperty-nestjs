@@ -53,7 +53,7 @@ export class Property {
   rating: PropertyRatingInterface;
 
   @Column()
-  landlord: string;
+  landlordId: string;
 
   @Column()
   createdAt: string;

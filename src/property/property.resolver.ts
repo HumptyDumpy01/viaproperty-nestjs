@@ -1,12 +1,24 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { PropertyType } from './property.type';
 import { PropertyService } from './property.service';
 import { PropertyInput } from './inputs/property.input';
+import { AuthService } from '../auth/auth.service';
+import { UserType } from '../auth/user.type';
 
 // Specify the type of the resolver to which it would be attached.
 @Resolver((of) => PropertyType)
 export class PropertyResolver {
-  constructor(private propertyService: PropertyService) {}
+  constructor(
+    private propertyService: PropertyService,
+    private authService: AuthService,
+  ) {}
 
   @Query((_returns) => [PropertyType])
   properties() {
@@ -25,16 +37,8 @@ export class PropertyResolver {
     return this.propertyService.createPropertyAdvert(propertyInput);
   }
 
-  // INFO: POST-HOOKS IN GRAPH-QL
-  // if you have e.g. a lesson where students array contains ids of students(child referencing)
-  // you can enable the unwound search of all students by using @ResolveField
-  // IMPORT THE ENTITY AS A TYPE, NOT <NAME>Type!
-  // @ResolveField()
-  // async students(@Parent() lesson: Lesson) {
-  //  console.log(lesson);
-  // TO USE THIS SERVICE, GO TO ITS MODULE AND INJECT A SERVICE ONTO "IMPORTS"
-  // THEN GO TO THE MODULE WHERE YOU WANT TO USE THIS SERVICE, AND INJECT ENTIRE
-  // THE MODULE ONTO IMPORTS.
-  //  return this.studentService.getManyStudents(lesson.students);
-  //}
+  @ResolveField(() => UserType)
+  async landlord(@Parent() property: PropertyType) {
+    return this.authService.getUserData(property.landlordId);
+  }
 }
