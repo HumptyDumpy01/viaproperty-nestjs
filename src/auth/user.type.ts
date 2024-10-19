@@ -21,9 +21,6 @@ export class UserType {
   @Field(() => String)
   initials: string;
 
-  @Field(() => String)
-  password: string;
-
   @Field(() => String, { defaultValue: AuthMethodEnum.PASSWORD })
   authMethod: AuthMethodEnum;
 
