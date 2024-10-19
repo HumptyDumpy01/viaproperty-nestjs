@@ -4,6 +4,9 @@ import { PropertyFor } from './enums/property-for.enum';
 import { PropertyDescriptionInterface } from './interfaces/property-description.interface';
 import { PropertyOwnership } from './enums/property-ownership.enum';
 import { PropertyHasInterface } from './interfaces/property-has.interface';
+import { PropertyRatingInterface } from './interfaces/property-rating.interface';
+import { PropertyOnSaleInterface } from './interfaces/property.onsale.interface';
+import { PropertyAdditionalConveniences } from './enums/property-additional-conveniences.enum';
 
 // INJECT EACH ENTITY ONTO "entities" ARRAY IN APP.MODULE MONGODB CONNECTION
 @Entity()
@@ -22,6 +25,9 @@ export class Property {
 
   @Column()
   tags: PropertyTags[];
+
+  @Column()
+  additionalConveniences: PropertyAdditionalConveniences[];
 
   @Column()
   propertyFor: PropertyFor;
@@ -45,23 +51,10 @@ export class Property {
   extraPricing: { title: string; price: number }[] | null;
 
   @Column()
-  onSale: {
-    isOnSale: boolean;
-    discount: string | null;
-    newPrice: number | null;
-  };
+  onSale: PropertyOnSaleInterface;
 
   @Column()
-  rating: {
-    count: number;
-    overall: number;
-    location: number[];
-    condition: number[];
-    ownership: number[];
-    amenities: number[];
-    noiseLevel: number[];
-    security: number[];
-  };
+  rating: PropertyRatingInterface;
 
   @Column()
   landlord: string;

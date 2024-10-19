@@ -1,0 +1,32 @@
+export interface PropertyAdditionalConveniences {
+  airConditioning: boolean;
+  balcony: boolean;
+  cableTv: boolean;
+  dishwasher: boolean;
+  fireplace: boolean;
+  furnished: boolean;
+  garden: boolean;
+  gym: boolean;
+  heating: boolean;
+  internet: boolean;
+  parking: boolean;
+  pool: boolean;
+  terrace: boolean;
+  washingMachine: boolean;
+  wifi: boolean;
+  elevator: boolean;
+  outdoorSpace: boolean;
+  petsAllowed: boolean;
+  wheelchairAccessible: boolean;
+  smokeDetectors: boolean;
+  carbonMonoxideDetector: boolean;
+  firstAidKit: boolean;
+  fireExtinguisher: boolean;
+  lockOnBedroomDoor: boolean;
+  privateEntrance: boolean;
+  smokeFree: boolean;
+  smokingAllowed: boolean;
+  suitableForEvents: boolean;
+  longTermStaysAllowed: boolean;
+  smartHomeFeatures: boolean;
+}
