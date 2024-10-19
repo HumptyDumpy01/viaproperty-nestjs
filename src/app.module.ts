@@ -6,6 +6,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { PropertyModule } from './property/property.module';
 import { Property } from './property/property.entity';
 import { AuthModule } from './auth/auth.module';
+import { User } from './auth/user.entity';
 
 dotenv.config({
   // path to .env.config
@@ -19,7 +20,7 @@ dotenv.config({
       url: `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@viaproperty.ez3sz.mongodb.net/viaproperty?retryWrites=true&w=majority&appName=viaproperty`,
       synchronize: true,
       useUnifiedTopology: true,
-      entities: [Property],
+      entities: [Property, User],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,

@@ -1,13 +1,19 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
-import { IsEmail, IsEnum, IsOptional, IsUUID, Matches } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsOptional,
+  IsUUID,
+  Matches,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 import { v4 as uuid } from 'uuid';
 import { AuthMethodEnum } from './enums/auth-method.enum';
 import { BalanceType } from './object-types/balance.type';
 import { RequestsType } from './object-types/requests.type';
 import { Any } from 'typeorm';
 
-// the input type, regarding GraphQL, is all about DTO.
-// still, to use any DTO's, remember to enable global validation pipes!
 @InputType()
 export class UserInput {
   @Field((_type) => ID, { defaultValue: uuid() })
@@ -19,6 +25,8 @@ export class UserInput {
   email: string;
 
   @Field(() => String)
+  @MinLength(2)
+  @MaxLength(100)
   initials: string;
 
   @Field(() => String)
@@ -28,15 +36,16 @@ export class UserInput {
   })
   password: string;
 
-  @Field(() => String, { defaultValue: AuthMethodEnum.PASSWORD })
-  authMethod: string;
+  @Field(() => AuthMethodEnum, { defaultValue: AuthMethodEnum.PASSWORD })
+  @IsEnum(AuthMethodEnum)
+  authMethod: AuthMethodEnum;
 
   @Field(() => String, {
     defaultValue: new Date().toISOString(),
   })
   createdAt: string;
 
-  @Field(() => Boolean)
+  @Field(() => Boolean, { defaultValue: false })
   online: boolean;
 
   @Field(() => [String], { defaultValue: [] })
@@ -54,20 +63,20 @@ export class UserInput {
   @IsOptional()
   purchases: string[];
 
-  @Field(() => Boolean)
+  @Field(() => Boolean, { defaultValue: true })
   active: boolean;
 
-  @Field(() => BalanceType)
+  @Field(() => BalanceType, { defaultValue: { total: 0 } })
   balance: BalanceType;
 
   @Field(() => [RequestsType], { defaultValue: [] })
-  pendingRequests: RequestsType[];
+  pendingRequests: { fromUser: string; status: 'pending'; orderId: string }[];
 
   @Field(() => [RequestsType], { defaultValue: [] })
-  rejectedRequests: RequestsType[];
+  rejectedRequests: { fromUser: string; status: 'rejected'; orderId: string }[];
 
   @Field(() => [RequestsType], { defaultValue: [] })
-  completedDeals: RequestsType[];
+  completedDeals: { fromUser: string; status: 'completed'; orderId: string }[];
 
   @Field(() => [String], { defaultValue: [] })
   @IsUUID('4', { each: true })
@@ -75,15 +84,10 @@ export class UserInput {
   favoriteChats: string[];
 
   @Field(() => [String], { defaultValue: [] })
-  // consist UUIDs
   @IsUUID('4', { each: true })
   @IsOptional()
   blockedUsers: string[];
 
   @Field(() => [Any], { defaultValue: [] })
   activity: any[];
-
-  @Field(() => String, { defaultValue: UserStatusEnum.USER })
-  @IsEnum(UserStatusEnum)
-  status: UserStatusEnum;
 }

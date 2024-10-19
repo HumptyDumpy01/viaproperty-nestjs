@@ -1,9 +1,9 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Any, Unique } from 'typeorm';
+import { Unique } from 'typeorm';
 import { AuthMethodEnum } from './enums/auth-method.enum';
 import { BalanceType } from './object-types/balance.type';
 import { RequestsType } from './object-types/requests.type';
-import { IsEnum, IsOptional, IsUUID } from 'class-validator';
+import { IsOptional, IsUUID } from 'class-validator';
 import { v4 as uuid } from 'uuid';
 
 // give the actual type a name that would
@@ -76,10 +76,6 @@ export class UserType {
   @IsOptional()
   blockedUsers: string[];
 
-  @Field(() => [Any], { defaultValue: [] })
-  activity: any[];
-
-  @Field(() => String, { defaultValue: UserStatusEnum.USER })
-  @IsEnum(UserStatusEnum)
-  status: UserStatusEnum;
+  @Field(() => [String], { defaultValue: [] })
+  activity: string[];
 }
