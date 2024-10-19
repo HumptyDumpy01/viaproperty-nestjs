@@ -8,7 +8,7 @@ import { PropertyInput } from './inputs/property.input';
 export class PropertyResolver {
   constructor(private propertyService: PropertyService) {}
 
-  @Query((_returns) => PropertyType)
+  @Query((_returns) => [PropertyType])
   properties() {
     return this.propertyService.getProperties();
   }
