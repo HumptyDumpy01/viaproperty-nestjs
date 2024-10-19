@@ -3,7 +3,6 @@ import { PropertyDescriptionInterface } from './interfaces/property-description.
 import { PropertyHasInterface } from './interfaces/property-has.interface';
 import { PropertyRatingInterface } from './interfaces/property-rating.interface';
 import { PropertyOnSaleInterface } from './interfaces/property.onsale.interface';
-import { PropertyAdditionalConveniences } from './enums/property-additional-conveniences.enum';
 
 // INJECT EACH ENTITY ONTO "entities" ARRAY IN APP.MODULE MONGODB CONNECTION
 @Entity()
@@ -24,7 +23,7 @@ export class Property {
   tags: string[];
 
   @Column()
-  additionalConveniences: PropertyAdditionalConveniences[];
+  additionalConveniences: string[];
 
   @Column()
   propertyFor: `rent` | `sell`;

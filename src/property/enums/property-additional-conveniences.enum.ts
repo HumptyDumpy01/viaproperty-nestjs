@@ -1,32 +1,32 @@
-export interface PropertyAdditionalConveniences {
-  airConditioning: boolean;
-  balcony: boolean;
-  cableTv: boolean;
-  dishwasher: boolean;
-  fireplace: boolean;
-  furnished: boolean;
-  garden: boolean;
-  gym: boolean;
-  heating: boolean;
-  internet: boolean;
-  parking: boolean;
-  pool: boolean;
-  terrace: boolean;
-  washingMachine: boolean;
-  wifi: boolean;
-  elevator: boolean;
-  outdoorSpace: boolean;
-  petsAllowed: boolean;
-  wheelchairAccessible: boolean;
-  smokeDetectors: boolean;
-  carbonMonoxideDetector: boolean;
-  firstAidKit: boolean;
-  fireExtinguisher: boolean;
-  lockOnBedroomDoor: boolean;
-  privateEntrance: boolean;
-  smokeFree: boolean;
-  smokingAllowed: boolean;
-  suitableForEvents: boolean;
-  longTermStaysAllowed: boolean;
-  smartHomeFeatures: boolean;
+export enum PropertyAdditionalConveniences {
+  AirConditioning = 'airConditioning',
+  Balcony = 'balcony',
+  CableTv = 'cableTv',
+  Dishwasher = 'dishwasher',
+  Fireplace = 'fireplace',
+  Furnished = 'furnished',
+  Garden = 'garden',
+  Gym = 'gym',
+  Heating = 'heating',
+  Internet = 'internet',
+  Parking = 'parking',
+  Pool = 'pool',
+  Terrace = 'terrace',
+  WashingMachine = 'washingMachine',
+  Wifi = 'wifi',
+  Elevator = 'elevator',
+  OutdoorSpace = 'outdoorSpace',
+  PetsAllowed = 'petsAllowed',
+  WheelchairAccessible = 'wheelchairAccessible',
+  SmokeDetectors = 'smokeDetectors',
+  CarbonMonoxideDetector = 'carbonMonoxideDetector',
+  FirstAidKit = 'firstAidKit',
+  FireExtinguisher = 'fireExtinguisher',
+  LockOnBedroomDoor = 'lockOnBedroomDoor',
+  PrivateEntrance = 'privateEntrance',
+  SmokeFree = 'smokeFree',
+  SmokingAllowed = 'smokingAllowed',
+  SuitableForEvents = 'suitableForEvents',
+  LongTermStaysAllowed = 'longTermStaysAllowed',
+  SmartHomeFeatures = 'smartHomeFeatures',
 }

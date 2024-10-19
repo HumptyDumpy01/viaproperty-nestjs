@@ -1,6 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { PropertyDescription } from './types/property-description.type';
-import { AdditionalConvenience } from './object-types/additional-conveniences.object.type';
 import { PropertyHas } from './object-types/property-has.object.type';
 import { ExtraPricing } from './object-types/extra-pricing.object.type';
 import { OnSale } from './object-types/on-sale.object.type';
@@ -20,8 +19,8 @@ export class PropertyType {
   @Field(() => [String])
   tags: string[];
 
-  @Field(() => [AdditionalConvenience])
-  additionalConveniences: AdditionalConvenience[];
+  @Field(() => [String])
+  additionalConveniences: string[];
 
   @Field()
   propertyFor: 'rent' | 'sell';
