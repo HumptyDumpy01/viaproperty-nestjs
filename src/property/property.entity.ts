@@ -1,8 +1,5 @@
 import { Column, Entity, ObjectIdColumn, PrimaryColumn } from 'typeorm';
-import { PropertyTags } from './enums/property-tags.enum';
-import { PropertyFor } from './enums/property-for.enum';
 import { PropertyDescriptionInterface } from './interfaces/property-description.interface';
-import { PropertyOwnership } from './enums/property-ownership.enum';
 import { PropertyHasInterface } from './interfaces/property-has.interface';
 import { PropertyRatingInterface } from './interfaces/property-rating.interface';
 import { PropertyOnSaleInterface } from './interfaces/property.onsale.interface';
@@ -24,19 +21,19 @@ export class Property {
   description: PropertyDescriptionInterface;
 
   @Column()
-  tags: PropertyTags[];
+  tags: string[];
 
   @Column()
   additionalConveniences: PropertyAdditionalConveniences[];
 
   @Column()
-  propertyFor: PropertyFor;
+  propertyFor: `rent` | `sell`;
 
   @Column()
   images: string[];
 
   @Column()
-  ownership: PropertyOwnership | null;
+  ownership: `freehold` | `leasehold` | null;
 
   @Column()
   propertyArea: number;
@@ -45,7 +42,7 @@ export class Property {
   propertyHas: PropertyHasInterface;
 
   @Column()
-  type: string;
+  type: 'apartment' | 'home' | 'cottage' | 'commercial';
 
   @Column()
   extraPricing: { title: string; price: number }[] | null;

@@ -1,20 +1,28 @@
-import { Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { PropertyType } from './property.type';
+import { PropertyService } from './property.service';
+import { PropertyInput } from './inputs/property.input';
 
 // Specify the type of the resolver to which it would be attached.
 @Resolver((of) => PropertyType)
 export class PropertyResolver {
-  @Query((returns) => PropertyType)
-  test() {
-    return {
-      message: `Hello World!`,
-    };
+  constructor(private propertyService: PropertyService) {}
+
+  @Query((_returns) => PropertyType)
+  properties() {
+    return this.propertyService.getProperties();
+  }
+
+  @Query((_returns) => PropertyType)
+  property(@Args('id') id: string) {
+    return this.propertyService.getProperty(id);
   }
 
   // example of usage (mutation)
-  @Mutation((returns) => PropertyType)
-  someMutation() {
+  @Mutation((_returns) => PropertyType)
+  addPropertyAdvert(@Args(`propertyInput`) propertyInput: PropertyInput) {
     // USE A SERVICE HERE. INJECT IT AS A DEP ONTO THIS CLASS
+    return this.propertyService.createPropertyAdvert(propertyInput);
   }
 
   // INFO: POST-HOOKS IN GRAPH-QL

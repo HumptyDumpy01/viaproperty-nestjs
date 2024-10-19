@@ -1,4 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { IsOptional, MaxLength, MinLength } from 'class-validator';
 
 @ObjectType()
 class GeoLocation {
@@ -17,19 +18,25 @@ class Location {
   @Field(() => GeoLocation)
   location: GeoLocation;
 
-  @Field()
+  @Field((type) => String, { nullable: true, defaultValue: null })
+  @IsOptional()
   description: string;
 }
 
 @ObjectType()
 class Feature {
   @Field()
+  @MinLength(5)
+  @MaxLength(100)
   title: string;
 
-  @Field(() => [String])
+  @Field(() => [String], { defaultValue: [] })
+  @IsOptional()
   images: string[];
 
   @Field()
+  @MinLength(5)
+  @MaxLength(600)
   description: string;
 }
 
@@ -75,15 +82,19 @@ class FloorPlan {
 @ObjectType()
 export class PropertyDescription {
   @Field()
+  @MinLength(5)
+  @MaxLength(400)
   overall: string;
 
-  @Field(() => [Feature])
+  @Field(() => [Feature], { defaultValue: [] })
+  @IsOptional()
   features: Feature[];
 
   @Field(() => Location)
   location: Location;
 
-  @Field()
+  @Field({ defaultValue: null })
+  @IsOptional()
   videoTour: string;
 
   @Field(() => Contacts)
@@ -92,6 +103,7 @@ export class PropertyDescription {
   @Field(() => PriceAndTaskHistory)
   priceAndTaskHistory: PriceAndTaskHistory;
 
-  @Field(() => [FloorPlan])
+  @Field(() => [FloorPlan], { defaultValue: [] })
+  @IsOptional()
   floorPlans: FloorPlan[];
 }

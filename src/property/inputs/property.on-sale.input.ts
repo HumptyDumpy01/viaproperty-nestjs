@@ -1,8 +1,8 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 
-@ObjectType()
-export class OnSale {
-  @Field()
+@InputType()
+export class OnSaleInput {
+  @Field((type) => Boolean, { defaultValue: false })
   isOnSale: boolean;
 
   @Field(() => String, { nullable: true, defaultValue: null })

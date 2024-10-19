@@ -1,7 +1,7 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 
-@ObjectType()
-export class Rating {
+@InputType()
+export class RatingInput {
   @Field({ nullable: true, defaultValue: 0 })
   count: number;
 
