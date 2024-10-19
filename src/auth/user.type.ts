@@ -25,7 +25,7 @@ export class UserType {
   password: string;
 
   @Field(() => String, { defaultValue: AuthMethodEnum.PASSWORD })
-  authMethod: string;
+  authMethod: AuthMethodEnum;
 
   @Field(() => String, {
     defaultValue: new Date().toISOString(),

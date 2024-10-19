@@ -1,7 +1,7 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
 import {
   IsEmail,
-  IsEnum,
+  IsIn,
   IsOptional,
   IsUUID,
   Matches,
@@ -10,9 +10,7 @@ import {
 } from 'class-validator';
 import { v4 as uuid } from 'uuid';
 import { AuthMethodEnum } from './enums/auth-method.enum';
-import { BalanceType } from './object-types/balance.type';
-import { RequestsType } from './object-types/requests.type';
-import { Any } from 'typeorm';
+import { RequestsInput } from './inputs/requests.input';
 
 @InputType()
 export class UserInput {
@@ -29,15 +27,20 @@ export class UserInput {
   @MaxLength(100)
   initials: string;
 
-  @Field(() => String)
-  @Matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, {
-    message:
-      'Password should contain at least 8 characters, one letter and one number',
+  @Field()
+  @MinLength(8)
+  @MaxLength(100)
+  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
+    message: `The password should have at least 1 upper, 1 lower case letter, and 1 special character.`,
   })
   password: string;
 
-  @Field(() => AuthMethodEnum, { defaultValue: AuthMethodEnum.PASSWORD })
-  @IsEnum(AuthMethodEnum)
+  @Field(() => String, { defaultValue: AuthMethodEnum.PASSWORD })
+  @IsIn([
+    AuthMethodEnum.PASSWORD,
+    AuthMethodEnum.TWO_FACTOR_AUTH,
+    AuthMethodEnum.CODE,
+  ])
   authMethod: AuthMethodEnum;
 
   @Field(() => String, {
@@ -66,16 +69,13 @@ export class UserInput {
   @Field(() => Boolean, { defaultValue: true })
   active: boolean;
 
-  @Field(() => BalanceType, { defaultValue: { total: 0 } })
-  balance: BalanceType;
-
-  @Field(() => [RequestsType], { defaultValue: [] })
+  @Field(() => [RequestsInput], { defaultValue: [] })
   pendingRequests: { fromUser: string; status: 'pending'; orderId: string }[];
 
-  @Field(() => [RequestsType], { defaultValue: [] })
+  @Field(() => [RequestsInput], { defaultValue: [] })
   rejectedRequests: { fromUser: string; status: 'rejected'; orderId: string }[];
 
-  @Field(() => [RequestsType], { defaultValue: [] })
+  @Field(() => [RequestsInput], { defaultValue: [] })
   completedDeals: { fromUser: string; status: 'completed'; orderId: string }[];
 
   @Field(() => [String], { defaultValue: [] })
@@ -88,6 +88,6 @@ export class UserInput {
   @IsOptional()
   blockedUsers: string[];
 
-  @Field(() => [Any], { defaultValue: [] })
-  activity: any[];
+  @Field(() => [String], { defaultValue: [] })
+  activity: string[];
 }

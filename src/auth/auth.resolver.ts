@@ -17,9 +17,12 @@ export class AuthResolver {
 
   // example of usage (mutation)
   @Mutation((returns) => UserType)
-  createUser(@Args(`createUserInput`) userInput: UserInput) {
+  createUser(
+    @Args(`createUserInput`) userInput: UserInput,
+    @Args(`confirmPassword`) confirmPassword: string,
+  ) {
     // USE A SERVICE HERE. INJECT IT AS A DEP ONTO THIS CLASS
-    return this.authService.createUser(userInput);
+    return this.authService.createUser(userInput, confirmPassword);
   }
 
   // INFO: POST-HOOKS IN GRAPH-QL

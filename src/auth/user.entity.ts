@@ -1,8 +1,10 @@
-import { Column, Entity, ObjectIdColumn, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ObjectIdColumn, PrimaryColumn, Unique } from 'typeorm';
 import { AuthMethodEnum } from './enums/auth-method.enum';
+import { UserStatusEnum } from './enums/user-status.enum';
 
 // INJECT EACH ENTITY ONTO "entities" ARRAY IN APP.MODULE MONGODB CONNECTION
 @Entity()
+@Unique([`email`])
 export class User {
   @ObjectIdColumn()
   _id: string;
@@ -61,7 +63,7 @@ export class User {
   @Column()
   activity: any[];
 
-  @Column()
+  @Column({ default: `USER` })
   status: UserStatusEnum;
 
   @Column()
