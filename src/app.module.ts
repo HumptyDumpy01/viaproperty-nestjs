@@ -13,6 +13,8 @@ import { ReportedErrors404Module } from './reported-errors-404/reported-errors-4
 import { ReportedErrors404 } from './reported-errors-404/reported-errors-404.entity';
 import { ReportedErrors500Module } from './reported-errors-500/reported-errors-500.module';
 import { ReportedErrors500 } from './reported-errors-500/reported-errors-500.entity';
+import { NewsletterModule } from './newsletter/newsletter.module';
+import { Newsletter } from './newsletter/newsletter.entity';
 
 dotenv.config({
   // path to .env.config
@@ -32,6 +34,7 @@ dotenv.config({
         PropertyRefund,
         ReportedErrors404,
         ReportedErrors500,
+        Newsletter,
       ],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -43,6 +46,7 @@ dotenv.config({
     PropertyRefundModule,
     ReportedErrors404Module,
     ReportedErrors500Module,
+    NewsletterModule,
   ],
   controllers: [],
   providers: [],
