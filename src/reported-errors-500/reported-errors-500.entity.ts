@@ -1,8 +1,8 @@
 import { Column, Entity, ObjectIdColumn, PrimaryColumn } from 'typeorm';
 
 // INJECT EACH ENTITY ONTO "entities" ARRAY IN APP.MODULE MONGODB CONNECTION
-@Entity(`reportedErrors404`)
-export class ReportedErrors404 {
+@Entity(`reportedErrors500`)
+export class ReportedErrors500 {
   @ObjectIdColumn()
   _id: string;
 
@@ -13,8 +13,8 @@ export class ReportedErrors404 {
   userMessage: string;
 
   @Column()
-  createdAt: string;
+  errorStack: string;
 
   @Column()
-  errorStack: string;
+  createdAt: Date;
 }

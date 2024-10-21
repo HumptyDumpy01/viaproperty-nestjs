@@ -20,6 +20,7 @@ export class ReportedErrors404Service {
       userMessage,
       id: uuid(),
       createdAt: new Date().toISOString(),
+      errorStack: new Error().stack,
     });
 
     return await this.reportedErrors404Repository.save(newReport);
