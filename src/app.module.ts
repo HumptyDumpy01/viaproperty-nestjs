@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { User } from './auth/user.entity';
 import { PropertyRefundModule } from './property-refund/property-refunds.module';
 import { PropertyRefund } from './property-refund/property-refunds.entity';
+import { ReportedErrors404Module } from './reported-errors-404/reported-errors-404.module';
 
 dotenv.config({
   // path to .env.config
@@ -31,6 +32,7 @@ dotenv.config({
     PropertyModule,
     AuthModule,
     PropertyRefundModule,
+    ReportedErrors404Module,
   ],
   controllers: [],
   providers: [],
