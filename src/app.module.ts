@@ -10,6 +10,7 @@ import { User } from './auth/user.entity';
 import { PropertyRefundModule } from './property-refund/property-refunds.module';
 import { PropertyRefund } from './property-refund/property-refunds.entity';
 import { ReportedErrors404Module } from './reported-errors-404/reported-errors-404.module';
+import { ReportedErrors404 } from './reported-errors-404/reported-errors-404.entity';
 
 dotenv.config({
   // path to .env.config
@@ -23,7 +24,7 @@ dotenv.config({
       url: `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@viaproperty.ez3sz.mongodb.net/viaproperty?retryWrites=true&w=majority&appName=viaproperty`,
       synchronize: true,
       useUnifiedTopology: true,
-      entities: [Property, User, PropertyRefund],
+      entities: [Property, User, PropertyRefund, ReportedErrors404],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
