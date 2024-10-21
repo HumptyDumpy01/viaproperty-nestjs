@@ -1,9 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  MethodNotAllowedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PropertyRefund } from './property-refunds.entity';
 import { Repository } from 'typeorm';
-import { PropertyRefundInput } from './property-refunds.input';
+import { PropertyRefundInput } from './inputs/property-refunds.input';
 import { v4 as uuid } from 'uuid';
+import { ChangePropertyRefundStatusInput } from './inputs/change-property-refund-status.input';
 
 @Injectable()
 export class PropertyRefundService {
@@ -22,18 +27,34 @@ export class PropertyRefundService {
       id: uuid(),
       createdAt: new Date().toISOString(),
       status: `pending`,
+      statusChanged: null,
+      available: true,
     });
     return await this.propertyRefundRepository.save(newRefund);
   }
 
   async changePropertyRefundStatus(
-    id: string,
-    status: `pending` | `approved` | `rejected`,
-  ): Promise<PropertyRefund> {
+    changePropertyRefundStatusInput: ChangePropertyRefundStatusInput,
+  ): Promise<any> {
+    const { id, status } = changePropertyRefundStatusInput;
+
+    const propertyRefund = await this.propertyRefundRepository.findOne({
+      where: { id },
+    });
+
+    if (propertyRefund.status === status) {
+      throw new InternalServerErrorException(`Status is already ${status}`);
+    }
+
+    if (!propertyRefund.available) {
+      throw new MethodNotAllowedException(`Property refund is not available`);
+    }
+
     const updatedPropertyRefund = await this.propertyRefundRepository.update(
-      id,
-      { status },
+      { id },
+      { status, statusChanged: new Date().toISOString(), available: false },
     );
-    return;
+
+    return updatedPropertyRefund;
   }
 }

@@ -18,4 +18,10 @@ export class PropertyRefund {
 
   @Column()
   status: `pending` | `approved` | `rejected`;
+
+  @Column()
+  statusChanged: Date | null;
+
+  @Column()
+  available: boolean;
 }
