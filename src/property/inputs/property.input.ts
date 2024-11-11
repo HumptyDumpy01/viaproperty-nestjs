@@ -75,7 +75,7 @@ export class PropertyInput {
 
   @Field()
   @IsUUID()
-  landlord: string;
+  landlordId: string;
 
   @IsDateString()
   @Field()

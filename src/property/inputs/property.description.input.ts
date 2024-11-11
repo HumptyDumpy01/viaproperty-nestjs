@@ -1,5 +1,11 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsIn, IsOptional, MaxLength, MinLength } from 'class-validator';
+import {
+  IsIn,
+  IsNotEmpty,
+  IsOptional,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 @InputType()
 class GeoLocationInput {
@@ -17,6 +23,14 @@ class LocationInput {
   @MaxLength(100)
   @Field()
   title: string;
+
+  @IsNotEmpty()
+  @Field()
+  country: string;
+
+  @IsNotEmpty()
+  @Field()
+  city: string;
 
   @Field(() => GeoLocationInput)
   location: GeoLocationInput;

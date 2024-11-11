@@ -3,6 +3,8 @@ export interface PropertyDescriptionInterface {
   features: { title: string; images: string[]; description: string }[];
   location: {
     title: string;
+    country: string;
+    city: string;
     // in GeoJSON format
     location: {
       type: string;
