@@ -10,13 +10,9 @@ export class NewsletterResolver {
 
   // example of usage (mutation)
   @Mutation((returns) => NewsletterType)
-  addNewUserToNewsletterCollection(
-    @Args(`newsletterInput`) newsletterInput: NewsletterInput,
-  ) {
+  newsletter(@Args(`newsletterInput`) newsletterInput: NewsletterInput) {
     // USE A SERVICE HERE. INJECT IT AS A DEP ONTO THIS CLASS
-    return this.newsletterService.addNewUserToNewsletterCollection(
-      newsletterInput,
-    );
+    return this.newsletterService.newsletter(newsletterInput);
   }
 
   // INFO: POST-HOOKS IN GRAPH-QL

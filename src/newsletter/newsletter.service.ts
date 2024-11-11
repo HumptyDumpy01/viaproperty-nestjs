@@ -12,15 +12,22 @@ export class NewsletterService {
     private newsletterRepository: Repository<Newsletter>,
   ) {}
 
-  async addNewUserToNewsletterCollection(
-    newsletterInput: NewsletterInput,
-  ): Promise<Newsletter> {
+  async newsletter(newsletterInput: NewsletterInput): Promise<Newsletter> {
     const { email } = newsletterInput;
-    const newsletter = this.newsletterRepository.create({
-      id: uuid(),
-      email,
-      createdAt: new Date(),
+    const existingNewsletter = await this.newsletterRepository.findOne({
+      where: { email },
     });
-    return this.newsletterRepository.save(newsletter);
+
+    if (existingNewsletter) {
+      existingNewsletter.createdAt = new Date();
+      return this.newsletterRepository.save(existingNewsletter);
+    } else {
+      const newNewsletter = this.newsletterRepository.create({
+        id: uuid(),
+        email,
+        createdAt: new Date(),
+      });
+      return this.newsletterRepository.save(newNewsletter);
+    }
   }
 }
