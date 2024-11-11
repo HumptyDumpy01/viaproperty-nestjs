@@ -15,7 +15,11 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new TransformInterceptor());
 
-  await app.listen(process.env.PORT || 3001);
+  app.enableCors({
+    origin: process.env.ALLOWED_HOST,
+  });
+
+  await app.listen(process.env.NEST_PORT || 3001);
 }
 
 bootstrap();

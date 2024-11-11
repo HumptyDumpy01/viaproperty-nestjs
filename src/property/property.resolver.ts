@@ -11,6 +11,7 @@ import { PropertyService } from './property.service';
 import { PropertyInput } from './inputs/property.input';
 import { AuthService } from '../auth/auth.service';
 import { UserType } from '../auth/user.type';
+import { PropertyFilterInput } from './inputs/propertyFilterInput';
 
 // Specify the type of the resolver to which it would be attached.
 @Resolver((of) => PropertyType)
@@ -20,9 +21,9 @@ export class PropertyResolver {
     private authService: AuthService,
   ) {}
 
-  @Query((_returns) => [PropertyType])
-  properties() {
-    return this.propertyService.getProperties();
+  @Query(() => [PropertyType])
+  properties(@Args('filter', { nullable: true }) filter?: PropertyFilterInput) {
+    return this.propertyService.getProperties(filter);
   }
 
   @Query((_returns) => PropertyType)

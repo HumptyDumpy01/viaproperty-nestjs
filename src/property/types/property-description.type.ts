@@ -15,6 +15,12 @@ class Location {
   @Field()
   title: string;
 
+  @Field()
+  city: string;
+
+  @Field()
+  country: string;
+
   @Field(() => GeoLocation)
   location: GeoLocation;
 
