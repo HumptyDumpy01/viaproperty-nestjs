@@ -1,5 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { IsIn, IsOptional, MaxLength, Min, MinLength } from 'class-validator';
+import { OnSaleInput } from './property.on-sale.input';
 
 @InputType()
 export class PropertyFilterInput {
@@ -40,4 +41,7 @@ export class PropertyFilterInput {
   @Field(() => Number, { nullable: true })
   @IsOptional()
   limit: number;
+
+  @Field(() => OnSaleInput, { nullable: true })
+  onSale?: OnSaleInput;
 }

@@ -23,6 +23,7 @@ export class PropertyService {
       if (filter.ownership) query.ownership = filter.ownership;
       if (filter.propertyArea) query.propertyArea = filter.propertyArea;
       if (filter.type) query.type = filter.type;
+      if (filter.onSale) query.onSale = filter.onSale;
     }
     const options = { where: query };
     if (filter?.limit) {
@@ -36,6 +37,7 @@ export class PropertyService {
   }
 
   async createPropertyAdvert(propertyInput: PropertyInput): Promise<any> {
+    // @ts-ignore
     const newProperty = this.propertyRepository.create(propertyInput);
     return await this.propertyRepository.save(newProperty);
   }

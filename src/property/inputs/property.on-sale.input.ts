@@ -9,5 +9,5 @@ export class OnSaleInput {
   discount: string | null;
 
   @Field(() => Number, { nullable: true, defaultValue: null })
-  newPrice: number | null;
+  newPrice: string | null;
 }
