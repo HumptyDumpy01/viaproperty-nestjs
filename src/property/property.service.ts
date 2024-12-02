@@ -24,6 +24,9 @@ export class PropertyService {
       if (filter.propertyArea) query.propertyArea = filter.propertyArea;
       if (filter.type) query.type = filter.type;
       if (filter.onSale) query.onSale = filter.onSale;
+      if (filter.searchFor) {
+        query.$text = { $search: filter.searchFor };
+      }
     }
     const options = { where: query };
     if (filter?.limit) {

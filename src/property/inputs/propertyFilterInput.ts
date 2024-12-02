@@ -20,6 +20,12 @@ export class PropertyFilterInput {
 
   @Field(() => String, { nullable: true })
   @IsOptional()
+  @MinLength(1)
+  @MaxLength(500)
+  searchFor?: string;
+
+  @Field(() => String, { nullable: true })
+  @IsOptional()
   @IsIn(['rent', 'sell'])
   propertyFor?: 'rent' | 'sell';
 
