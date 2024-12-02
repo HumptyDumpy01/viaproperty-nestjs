@@ -48,6 +48,10 @@ export class PropertyFilterInput {
   @IsOptional()
   limit: number;
 
+  @Field(() => Number, { nullable: true })
+  @IsOptional()
+  offset: number;
+
   @Field(() => OnSaleInput, { nullable: true })
   onSale?: OnSaleInput;
 }

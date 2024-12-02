@@ -27,6 +27,9 @@ export class PropertyService {
       if (filter.searchFor) {
         query.$text = { $search: filter.searchFor };
       }
+      if (filter.offset) {
+        query.offset = filter.offset;
+      }
     }
     const options = { where: query };
     if (filter?.limit) {
