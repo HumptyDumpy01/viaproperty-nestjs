@@ -18,6 +18,18 @@ export class PropertyFilterInput {
   @IsOptional()
   additionalConveniences?: string[];
 
+  // add propertyHas
+  @Field(() => Number, { nullable: true })
+  @IsOptional()
+  propertyHas?: {
+    beds: number;
+    showers: number;
+    bathrooms: number;
+    bedrooms: number;
+    kitchens: number;
+    parkingSpaces: number;
+  };
+
   @Field(() => String, { nullable: true })
   @IsOptional()
   @MinLength(1)

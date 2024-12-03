@@ -9,7 +9,7 @@ export class PropertyHasInput {
   showers: number;
 
   @Field(() => Number, { defaultValue: 0 })
-  baths: number;
+  bathrooms: number;
 
   @Field(() => Number, { defaultValue: 0 })
   bedrooms: number;
