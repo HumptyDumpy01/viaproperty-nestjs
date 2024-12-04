@@ -6,7 +6,7 @@ export class PropertyHas {
   beds: number;
 
   @Field()
-  showers: number;
+  livingRooms: number;
 
   @Field()
   bathrooms: number;
