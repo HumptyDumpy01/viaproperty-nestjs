@@ -8,6 +8,6 @@ export class OnSale {
   @Field(() => String, { nullable: true, defaultValue: null })
   discount: string | null;
 
-  @Field(() => Number, { nullable: true, defaultValue: null })
-  newPrice: number | null;
+  @Field(() => String, { nullable: true, defaultValue: null })
+  newPrice: string | null;
 }
