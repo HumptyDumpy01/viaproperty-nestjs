@@ -22,6 +22,9 @@ export class User {
   password: string;
 
   @Column()
+  bio: string;
+
+  @Column()
   authMethod: AuthMethodEnum;
 
   @Column()

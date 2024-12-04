@@ -99,7 +99,7 @@ export class PropertyDescription {
   @Field(() => Location)
   location: Location;
 
-  @Field({ defaultValue: null })
+  @Field({ defaultValue: null, nullable: true })
   @IsOptional()
   videoTour: string;
 

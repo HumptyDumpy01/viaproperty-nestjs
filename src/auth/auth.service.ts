@@ -36,6 +36,7 @@ export class AuthService {
       email,
       initials,
       password: hashedPassword,
+      bio: '',
       status: UserStatusEnum.USER,
       authMethod: AuthMethodEnum.PASSWORD,
       createdAt: new Date().toISOString(),

@@ -29,6 +29,11 @@ export class UserType {
   })
   createdAt: string;
 
+  @Field(() => String, {
+    defaultValue: '',
+  })
+  bio: string;
+
   @Field(() => Boolean)
   online: boolean;
 
