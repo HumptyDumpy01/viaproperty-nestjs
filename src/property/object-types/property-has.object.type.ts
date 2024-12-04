@@ -17,6 +17,6 @@ export class PropertyHas {
   @Field()
   kitchens: number;
 
-  @Field()
+  @Field({ defaultValue: 0 })
   parkingSpaces: number;
 }

@@ -6,7 +6,7 @@ export class PropertyHasInput {
   beds: number;
 
   @Field(() => Number, { defaultValue: 0 })
-  showers: number;
+  livingRooms: number;
 
   @Field(() => Number, { defaultValue: 0 })
   bathrooms: number;
@@ -15,7 +15,7 @@ export class PropertyHasInput {
   bedrooms: number;
 
   @Field(() => Number, { defaultValue: 0 })
-  parkingSlots: number;
+  parkingSpaces: number;
 
   @Field(() => Number, { defaultValue: 0 })
   kitchens: number;
