@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { PropertyCommentRatedObjectType } from './object-types/property-comment-rated.object.type';
 
 @ObjectType(`PropertyComments`)
 export class PropertyCommentsType {
@@ -13,6 +14,9 @@ export class PropertyCommentsType {
 
   @Field(() => String)
   comment: string;
+
+  @Field(() => PropertyCommentRatedObjectType)
+  rated: PropertyCommentRatedObjectType;
 
   @Field(() => [String])
   likes: string[];

@@ -1,6 +1,6 @@
 import { Column, Entity, ObjectIdColumn, PrimaryColumn } from 'typeorm';
 
-@Entity()
+@Entity(`propertyComments`)
 export class PropertyComments {
   @ObjectIdColumn()
   _id: string;
