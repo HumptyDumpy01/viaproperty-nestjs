@@ -8,5 +8,6 @@ import { AuthModule } from '../auth/auth.module';
 @Module({
   providers: [PropertyService, PropertyResolver],
   imports: [TypeOrmModule.forFeature([Property]), AuthModule],
+  exports: [PropertyService],
 })
 export class PropertyModule {}
