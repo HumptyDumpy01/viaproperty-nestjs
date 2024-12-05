@@ -15,6 +15,8 @@ import { ReportedErrors500Module } from './reported-errors-500/reported-errors-5
 import { ReportedErrors500 } from './reported-errors-500/reported-errors-500.entity';
 import { NewsletterModule } from './newsletter/newsletter.module';
 import { Newsletter } from './newsletter/newsletter.entity';
+import { PropertyCommentsModule } from './property-comments/property-comments.module';
+import { PropertyComments } from './property-comments/property-comments.entity';
 
 dotenv.config({
   // path to .env.config
@@ -35,6 +37,7 @@ dotenv.config({
         ReportedErrors404,
         ReportedErrors500,
         Newsletter,
+        PropertyComments,
       ],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -47,6 +50,7 @@ dotenv.config({
     ReportedErrors404Module,
     ReportedErrors500Module,
     NewsletterModule,
+    PropertyCommentsModule,
   ],
   controllers: [],
   providers: [],
