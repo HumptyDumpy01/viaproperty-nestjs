@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { PropertyCommentsService } from './property-comments.service';
 import { PropertyCommentsResolver } from './property-comments.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -10,8 +10,9 @@ import { AuthModule } from '../auth/auth.module';
   providers: [PropertyCommentsService, PropertyCommentsResolver],
   imports: [
     TypeOrmModule.forFeature([PropertyComments]),
-    PropertyModule,
+    forwardRef(() => PropertyModule),
     AuthModule,
   ],
+  exports: [PropertyCommentsService],
 })
 export class PropertyCommentsModule {}
