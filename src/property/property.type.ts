@@ -41,8 +41,8 @@ export class PropertyType {
   @Field()
   type: string;
 
-  @Field(() => [ExtraPricing], { nullable: true })
-  extraPricing: ExtraPricing[] | null;
+  @Field(() => [ExtraPricing], { defaultValue: [] })
+  extraPricing: ExtraPricing[] | [];
 
   @Field(() => OnSale)
   onSale: OnSale;

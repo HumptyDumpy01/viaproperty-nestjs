@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PropertyInput } from './inputs/property.input';
 import { PropertyFilterInput } from './inputs/propertyFilterInput';
+import { filterProperties } from '../../utils/functions/filterProperties';
 
 @Injectable()
 export class PropertyService {
@@ -13,25 +14,7 @@ export class PropertyService {
   ) {}
 
   async getProperties(filter?: PropertyFilterInput): Promise<Property[] | []> {
-    const query: any = {};
-    if (filter) {
-      if (filter.title) query.title = filter.title;
-      if (filter.tags) query.tags = { $in: filter.tags };
-      if (filter.additionalConveniences)
-        query.additionalConveniences = { $in: filter.additionalConveniences };
-      if (filter.propertyFor) query.propertyFor = filter.propertyFor;
-      if (filter.ownership) query.ownership = filter.ownership;
-      if (filter.propertyArea) query.propertyArea = filter.propertyArea;
-      if (filter.type) query.type = filter.type;
-      if (filter.onSale) query.onSale = filter.onSale;
-      if (filter.searchFor) {
-        query.$text = { $search: filter.searchFor };
-      }
-      if (filter.offset) {
-        query.offset = filter.offset;
-      }
-    }
-    const options = { where: query };
+    const options = filterProperties(filter);
     if (filter?.limit) {
       options['take'] = filter.limit;
     }
