@@ -1,18 +1,28 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { PropertyCommentsType } from './property-comments.type';
 import { PropertyCommentsService } from './property-comments.service';
 import { PropertyCommentInput } from './inputs/property-comment.input';
+import { UserType } from '../auth/user.type';
+import { AuthService } from '../auth/auth.service';
 
 // Specify the type of the resolver to which it would be attached.
 @Resolver((of) => PropertyCommentsType)
 export class PropertyCommentsResolver {
-  constructor(private propertyCommentsService: PropertyCommentsService) {}
+  constructor(
+    private propertyCommentsService: PropertyCommentsService,
+    private authService: AuthService,
+  ) {}
 
-  @Query((returns) => PropertyCommentsType)
-  test() {
-    return {
-      message: `Hello World!`,
-    };
+  @Query((returns) => [PropertyCommentsType])
+  propertyComments(@Args('propertyId') propertyId: string) {
+    return this.propertyCommentsService.propertyComments(propertyId);
   }
 
   // example of usage (mutation)
@@ -21,6 +31,11 @@ export class PropertyCommentsResolver {
     @Args('propertyCommentInput') propertyCommentInput: PropertyCommentInput,
   ) {
     return this.propertyCommentsService.createComment(propertyCommentInput);
+  }
+
+  @ResolveField(() => UserType)
+  async user(@Parent() propertyCommentsType: PropertyCommentsType) {
+    return this.authService.getUserData(propertyCommentsType.userId);
   }
 
   // INFO: POST-HOOKS IN GRAPH-QL

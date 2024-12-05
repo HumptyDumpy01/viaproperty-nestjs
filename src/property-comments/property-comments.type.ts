@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { PropertyCommentRatedObjectType } from './object-types/property-comment-rated.object.type';
+import { UserType } from '../auth/user.type';
 
 @ObjectType(`PropertyComments`)
 export class PropertyCommentsType {
@@ -11,6 +12,9 @@ export class PropertyCommentsType {
 
   @Field(() => ID)
   userId: string;
+
+  @Field(() => UserType)
+  user: UserType;
 
   @Field(() => String)
   comment: string;

@@ -17,6 +17,12 @@ export class PropertyCommentsService {
     private authService: AuthService,
   ) {}
 
+  async propertyComments(propertyId: string): Promise<PropertyComments[] | []> {
+    return await this.propertyCommentsRepository.find({
+      where: { propertyId },
+    });
+  }
+
   async createComment(
     propertyCommentInput: PropertyCommentInput,
   ): Promise<PropertyComments> {
