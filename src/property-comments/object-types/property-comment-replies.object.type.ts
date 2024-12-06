@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { IsDateString, IsUUID, Max, Min } from 'class-validator';
+import { IsDateString, IsUUID } from 'class-validator';
 
 @ObjectType()
 export class PropertyCommentRepliesObjectType {
@@ -8,8 +8,6 @@ export class PropertyCommentRepliesObjectType {
   id: string;
 
   @Field(() => String)
-  @Min(2)
-  @Max(600)
   comment: string;
 
   @Field(() => ID)

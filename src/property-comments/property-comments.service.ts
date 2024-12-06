@@ -7,6 +7,8 @@ import { v4 as uuid } from 'uuid';
 import { PropertyService } from '../property/property.service';
 import { AuthService } from '../auth/auth.service';
 import { showErrorMessage } from '../../utils/functions/showErrorMessage';
+import { PropertyReplyInput } from './inputs/property-reply.input';
+import { PropertyRepliesInterface } from './interfaces/property-replies.interface';
 
 @Injectable()
 export class PropertyCommentsService {
@@ -21,6 +23,41 @@ export class PropertyCommentsService {
     return await this.propertyCommentsRepository.find({
       where: { propertyId },
     });
+  }
+
+  async createReply(
+    propertyReplyInput: PropertyReplyInput,
+  ): Promise<PropertyRepliesInterface> {
+    const { commentId, replierId } = propertyReplyInput;
+
+    // push newReply into replies array of comment
+    const propertyComment = await this.propertyCommentsRepository.findOne({
+      where: { id: commentId },
+    });
+
+    if (!propertyComment) {
+      throw new NotFoundException(
+        showErrorMessage(`Comment with id ${commentId} not found`),
+      );
+    }
+
+    const user = await this.authService.getUserData(replierId);
+
+    if (!user) {
+      throw new NotFoundException(
+        showErrorMessage(`User with id ${replierId} not found`),
+      );
+    }
+
+    const newReply = {
+      ...propertyReplyInput,
+      id: uuid(),
+      createdAt: new Date().toISOString(),
+    };
+
+    propertyComment.replies.push(newReply);
+    await this.propertyCommentsRepository.save(propertyComment);
+    return newReply;
   }
 
   async createComment(

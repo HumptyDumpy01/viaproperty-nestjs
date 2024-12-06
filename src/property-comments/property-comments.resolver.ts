@@ -11,6 +11,8 @@ import { PropertyCommentsService } from './property-comments.service';
 import { PropertyCommentInput } from './inputs/property-comment.input';
 import { UserType } from '../auth/user.type';
 import { AuthService } from '../auth/auth.service';
+import { PropertyReplyInput } from './inputs/property-reply.input';
+import { PropertyCommentRepliesObjectType } from './object-types/property-comment-replies.object.type';
 
 // Specify the type of the resolver to which it would be attached.
 @Resolver((of) => PropertyCommentsType)
@@ -31,6 +33,20 @@ export class PropertyCommentsResolver {
     @Args('propertyCommentInput') propertyCommentInput: PropertyCommentInput,
   ) {
     return this.propertyCommentsService.createComment(propertyCommentInput);
+  }
+
+  @Mutation((returns) => PropertyCommentsType)
+  createReply(
+    @Args('propertyReplyInput') propertyReplyInput: PropertyReplyInput,
+  ) {
+    return this.propertyCommentsService.createReply(propertyReplyInput);
+  }
+
+  @ResolveField(() => UserType)
+  async replier(
+    @Parent() propertyCommentRepliesType: PropertyCommentRepliesObjectType,
+  ) {
+    return this.authService.getUserData(propertyCommentRepliesType.replierId);
   }
 
   @ResolveField(() => UserType)

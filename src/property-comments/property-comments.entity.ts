@@ -1,5 +1,5 @@
 import { Column, Entity, ObjectIdColumn, PrimaryColumn } from 'typeorm';
-import { PropertyRepliesInterface } from './interfaces/property-replies';
+import { PropertyRepliesInterface } from './interfaces/property-replies.interface';
 
 @Entity(`propertyComments`)
 export class PropertyComments {
