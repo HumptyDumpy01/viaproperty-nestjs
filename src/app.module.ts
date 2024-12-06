@@ -17,6 +17,8 @@ import { NewsletterModule } from './newsletter/newsletter.module';
 import { Newsletter } from './newsletter/newsletter.entity';
 import { PropertyCommentsModule } from './property-comments/property-comments.module';
 import { PropertyComments } from './property-comments/property-comments.entity';
+import { PropertyQuestionsModule } from './property-questions/property-questions.module';
+import { PropertyQuestions } from './property-questions/property-questions.entity';
 
 dotenv.config({
   // path to .env.config
@@ -38,6 +40,7 @@ dotenv.config({
         ReportedErrors500,
         Newsletter,
         PropertyComments,
+        PropertyQuestions,
       ],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -51,6 +54,7 @@ dotenv.config({
     ReportedErrors500Module,
     NewsletterModule,
     PropertyCommentsModule,
+    PropertyQuestionsModule,
   ],
   controllers: [],
   providers: [],
