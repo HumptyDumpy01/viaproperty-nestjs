@@ -3,5 +3,6 @@ export interface PropertyRepliesInterface {
   comment: string;
   commentId: string;
   replierId: string;
+  replierInitials: string;
   createdAt: string;
 }

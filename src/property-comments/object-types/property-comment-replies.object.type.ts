@@ -15,6 +15,9 @@ export class PropertyCommentRepliesObjectType {
   replierId: string;
 
   @Field(() => String)
+  replierInitials: string;
+
+  @Field(() => String)
   @IsDateString()
   createdAt: string;
 }
