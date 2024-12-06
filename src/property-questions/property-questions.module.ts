@@ -13,5 +13,6 @@ import { AuthModule } from '../auth/auth.module';
     AuthModule,
     TypeOrmModule.forFeature([PropertyQuestions]),
   ],
+  exports: [PropertyQuestionsService],
 })
 export class PropertyQuestionsModule {}

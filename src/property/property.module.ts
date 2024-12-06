@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PropertyResolver } from './property.resolver';
 import { AuthModule } from '../auth/auth.module';
 import { PropertyCommentsModule } from '../property-comments/property-comments.module';
+import { PropertyQuestionsModule } from '../property-questions/property-questions.module';
 
 @Module({
   providers: [PropertyService, PropertyResolver],
@@ -12,6 +13,7 @@ import { PropertyCommentsModule } from '../property-comments/property-comments.m
     TypeOrmModule.forFeature([Property]),
     AuthModule,
     forwardRef(() => PropertyCommentsModule),
+    PropertyQuestionsModule,
   ],
   exports: [PropertyService],
 })

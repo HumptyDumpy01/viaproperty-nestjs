@@ -1,18 +1,30 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { PropertyQuestionsService } from './property-questions.service';
 import { PropertyQuestionsType } from './property-questions.type';
 import { PropertyQuestionInput } from './inputs/property-question.input';
+import { UserType } from '../auth/user.type';
+import { AuthService } from '../auth/auth.service';
 
 // Specify the type of the resolver to which it would be attached.
 @Resolver((of) => PropertyQuestionsType)
 export class PropertyQuestionsResolver {
-  constructor(private propertyQuestionsService: PropertyQuestionsService) {}
+  constructor(
+    private propertyQuestionsService: PropertyQuestionsService,
+    private authService: AuthService,
+  ) {}
 
-  @Query((returns) => PropertyQuestionsType)
-  getPropertyQuestionsByPropId() {
-    return {
-      message: `Hello World!`,
-    };
+  @Query((returns) => [PropertyQuestionsType])
+  getPropertyQuestionsByPropId(@Args(`propertyId`) propertyId: string) {
+    return this.propertyQuestionsService.getPropertyQuestionsByPropId(
+      propertyId,
+    );
   }
 
   // example of usage (mutation)
@@ -23,6 +35,11 @@ export class PropertyQuestionsResolver {
     return this.propertyQuestionsService.createPropertyQuestion(
       propertyQuestionInput,
     );
+  }
+
+  @ResolveField(() => UserType)
+  async user(@Parent() propertyQuestionsType: PropertyQuestionsType) {
+    return this.authService.getUserData(propertyQuestionsType.userId);
   }
 
   // INFO: POST-HOOKS IN GRAPH-QL

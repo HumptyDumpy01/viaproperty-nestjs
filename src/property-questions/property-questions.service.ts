@@ -17,7 +17,17 @@ export class PropertyQuestionsService {
     private authService: AuthService,
   ) {}
 
-  async createPropertyQuestion(propertyQuestionInput: PropertyQuestionInput) {
+  async getPropertyQuestionsByPropId(
+    propertyId: string,
+  ): Promise<PropertyQuestions[] | []> {
+    return await this.propertyQuestionsRepository.find({
+      where: { propertyId },
+    });
+  }
+
+  async createPropertyQuestion(
+    propertyQuestionInput: PropertyQuestionInput,
+  ): Promise<PropertyQuestions> {
     const { propertyId, userId } = propertyQuestionInput;
 
     const property = await this.propertyService.getProperty(propertyId);

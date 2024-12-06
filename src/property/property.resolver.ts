@@ -14,6 +14,8 @@ import { UserType } from '../auth/user.type';
 import { PropertyFilterInput } from './inputs/propertyFilterInput';
 import { PropertyCommentsService } from '../property-comments/property-comments.service';
 import { PropertyCommentsType } from '../property-comments/property-comments.type';
+import { PropertyQuestionsService } from '../property-questions/property-questions.service';
+import { PropertyQuestionsType } from '../property-questions/property-questions.type';
 
 // Specify the type of the resolver to which it would be attached.
 @Resolver((of) => PropertyType)
@@ -22,6 +24,7 @@ export class PropertyResolver {
     private propertyService: PropertyService,
     private authService: AuthService,
     private propertyCommentsService: PropertyCommentsService,
+    private propertyQuestionsService: PropertyQuestionsService,
   ) {}
 
   @Query(() => [PropertyType])
@@ -49,5 +52,12 @@ export class PropertyResolver {
   @ResolveField(() => [PropertyCommentsType])
   async reviews(@Parent() property: PropertyType) {
     return this.propertyCommentsService.propertyComments(property.id);
+  }
+
+  @ResolveField(() => [PropertyQuestionsType])
+  async questions(@Parent() property: PropertyType) {
+    return this.propertyQuestionsService.getPropertyQuestionsByPropId(
+      property.id,
+    );
   }
 }
