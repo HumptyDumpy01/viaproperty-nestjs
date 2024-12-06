@@ -14,7 +14,7 @@ export class PropertyReplyInput {
 
   @Field(() => String)
   @IsEnum(UserTypeEnum, { message: 'Invalid user type' })
-  userType: String;
+  userType: UserTypeEnum;
 
   @Field()
   @MinLength(1, { message: 'Replier initials are too short(< 1 character)' })
