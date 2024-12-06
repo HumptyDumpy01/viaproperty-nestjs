@@ -1,4 +1,5 @@
 import { Column, Entity, ObjectIdColumn, PrimaryColumn } from 'typeorm';
+import { PropertyRepliesInterface } from './interfaces/property-replies';
 
 @Entity(`propertyComments`)
 export class PropertyComments {
@@ -25,4 +26,7 @@ export class PropertyComments {
 
   @Column({ type: `uuid` })
   userId: string;
+
+  @Column()
+  replies: PropertyRepliesInterface[];
 }

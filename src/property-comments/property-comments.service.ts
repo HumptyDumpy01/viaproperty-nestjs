@@ -48,6 +48,7 @@ export class PropertyCommentsService {
       ...propertyCommentInput,
       id: uuid(),
       likes: [],
+      replies: [],
       createdAt: new Date().toISOString(),
     };
     const newComment = this.propertyCommentsRepository.create(newCommentData);
