@@ -7,6 +7,8 @@ import { v4 as uuid } from 'uuid';
 import { Repository } from 'typeorm';
 import { PropertyService } from '../property/property.service';
 import { AuthService } from '../auth/auth.service';
+import { PropertyReplyInput } from '../property-comments/inputs/property-reply.input';
+import { PropertyRepliesInterface } from '../property-comments/interfaces/property-replies.interface';
 
 @Injectable()
 export class PropertyQuestionsService {
@@ -57,5 +59,39 @@ export class PropertyQuestionsService {
     const newQuestion =
       this.propertyQuestionsRepository.create(newQuestionData);
     return await this.propertyQuestionsRepository.save(newQuestion);
+  }
+
+  async createReplyOnQuestion(
+    propertyReplyInput: PropertyReplyInput,
+  ): Promise<PropertyRepliesInterface> {
+    const { commentId, replierId } = propertyReplyInput;
+
+    // push newReply into replies an array of comment
+    const propertyComment = await this.propertyQuestionsRepository.findOne({
+      where: { id: commentId },
+    });
+    const user = await this.authService.getUserData(replierId);
+
+    if (!propertyComment) {
+      throw new NotFoundException(
+        showErrorMessage(`Comment with id ${commentId} not found`),
+      );
+    }
+
+    if (!user) {
+      throw new NotFoundException(
+        showErrorMessage(`User with id ${replierId} not found`),
+      );
+    }
+
+    const newReply = {
+      ...propertyReplyInput,
+      id: uuid(),
+      createdAt: new Date().toISOString(),
+    };
+
+    propertyComment.replies.push(newReply);
+    await this.propertyQuestionsRepository.save(propertyComment);
+    return newReply;
   }
 }

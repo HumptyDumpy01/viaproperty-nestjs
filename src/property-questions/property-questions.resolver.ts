@@ -11,16 +11,18 @@ import { PropertyQuestionsType } from './property-questions.type';
 import { PropertyQuestionInput } from './inputs/property-question.input';
 import { UserType } from '../auth/user.type';
 import { AuthService } from '../auth/auth.service';
+import { PropertyReplyInput } from '../property-comments/inputs/property-reply.input';
+import { PropertyQuestionRepliesObjectType } from './object-types/property-question-reply.object.type';
 
 // Specify the type of the resolver to which it would be attached.
-@Resolver((of) => PropertyQuestionsType)
+@Resolver((_of) => PropertyQuestionsType)
 export class PropertyQuestionsResolver {
   constructor(
     private propertyQuestionsService: PropertyQuestionsService,
     private authService: AuthService,
   ) {}
 
-  @Query((returns) => [PropertyQuestionsType])
+  @Query((_returns) => [PropertyQuestionsType])
   getPropertyQuestionsByPropId(@Args(`propertyId`) propertyId: string) {
     return this.propertyQuestionsService.getPropertyQuestionsByPropId(
       propertyId,
@@ -28,13 +30,29 @@ export class PropertyQuestionsResolver {
   }
 
   // example of usage (mutation)
-  @Mutation((returns) => PropertyQuestionsType)
+  @Mutation((_returns) => PropertyQuestionsType)
   createPropertyQuestion(
     @Args('propertyQuestionInput') propertyQuestionInput: PropertyQuestionInput,
   ) {
     return this.propertyQuestionsService.createPropertyQuestion(
       propertyQuestionInput,
     );
+  }
+
+  @Mutation((_returns) => PropertyQuestionsType)
+  createReplyOnQuestion(
+    @Args('propertyReplyInput') propertyReplyInput: PropertyReplyInput,
+  ) {
+    return this.propertyQuestionsService.createReplyOnQuestion(
+      propertyReplyInput,
+    );
+  }
+
+  @ResolveField(() => UserType)
+  async replier(
+    @Parent() propertyCommentRepliesType: PropertyQuestionRepliesObjectType,
+  ) {
+    return this.authService.getUserData(propertyCommentRepliesType.replierId);
   }
 
   @ResolveField(() => UserType)
