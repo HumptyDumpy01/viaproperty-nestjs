@@ -25,41 +25,6 @@ export class PropertyCommentsService {
     });
   }
 
-  async createReply(
-    propertyReplyInput: PropertyReplyInput,
-  ): Promise<PropertyRepliesInterface> {
-    const { commentId, replierId } = propertyReplyInput;
-
-    // push newReply into replies array of comment
-    const propertyComment = await this.propertyCommentsRepository.findOne({
-      where: { id: commentId },
-    });
-
-    if (!propertyComment) {
-      throw new NotFoundException(
-        showErrorMessage(`Comment with id ${commentId} not found`),
-      );
-    }
-
-    const user = await this.authService.getUserData(replierId);
-
-    if (!user) {
-      throw new NotFoundException(
-        showErrorMessage(`User with id ${replierId} not found`),
-      );
-    }
-
-    const newReply = {
-      ...propertyReplyInput,
-      id: uuid(),
-      createdAt: new Date().toISOString(),
-    };
-
-    propertyComment.replies.push(newReply);
-    await this.propertyCommentsRepository.save(propertyComment);
-    return newReply;
-  }
-
   async createComment(
     propertyCommentInput: PropertyCommentInput,
   ): Promise<PropertyComments> {
@@ -90,5 +55,39 @@ export class PropertyCommentsService {
     };
     const newComment = this.propertyCommentsRepository.create(newCommentData);
     return await this.propertyCommentsRepository.save(newComment);
+  }
+
+  async createReply(
+    propertyReplyInput: PropertyReplyInput,
+  ): Promise<PropertyRepliesInterface> {
+    const { commentId, replierId } = propertyReplyInput;
+
+    // push newReply into replies an array of comment
+    const propertyComment = await this.propertyCommentsRepository.findOne({
+      where: { id: commentId },
+    });
+    const user = await this.authService.getUserData(replierId);
+
+    if (!propertyComment) {
+      throw new NotFoundException(
+        showErrorMessage(`Comment with id ${commentId} not found`),
+      );
+    }
+
+    if (!user) {
+      throw new NotFoundException(
+        showErrorMessage(`User with id ${replierId} not found`),
+      );
+    }
+
+    const newReply = {
+      ...propertyReplyInput,
+      id: uuid(),
+      createdAt: new Date().toISOString(),
+    };
+
+    propertyComment.replies.push(newReply);
+    await this.propertyCommentsRepository.save(propertyComment);
+    return newReply;
   }
 }
