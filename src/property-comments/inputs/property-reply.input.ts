@@ -1,5 +1,6 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
-import { IsUUID, MaxLength, MinLength } from 'class-validator';
+import { IsEnum, IsUUID, MaxLength, MinLength } from 'class-validator';
+import { UserTypeEnum } from '../enums/user-type.enum';
 
 @InputType()
 export class PropertyReplyInput {
@@ -10,6 +11,10 @@ export class PropertyReplyInput {
   @Field(() => ID)
   @IsUUID()
   replierId: string;
+
+  @Field(() => String)
+  @IsEnum(UserTypeEnum, { message: 'Invalid user type' })
+  userType: String;
 
   @Field()
   @MinLength(1, { message: 'Replier initials are too short(< 1 character)' })
