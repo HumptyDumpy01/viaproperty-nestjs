@@ -11,13 +11,22 @@ export function filterProperties(filter: PropertyFilterInput) {
     if (filter.ownership) query.ownership = filter.ownership;
     if (filter.propertyArea) query.propertyArea = filter.propertyArea;
     if (filter.type) query.type = filter.type;
-    if (filter.onSale) query.onSale = filter.onSale;
+
+    // Fix for onSale filter
+    if (filter.onSale?.isOnSale !== undefined) {
+      query['onSale.isOnSale'] = filter.onSale.isOnSale;
+    }
+
     if (filter.searchFor) {
       query.$text = { $search: filter.searchFor };
     }
-    if (filter.offset) {
-      query.offset = filter.offset;
-    }
   }
-  return { where: query };
+  const options = { where: query };
+  if (filter?.limit) {
+    options['take'] = filter.limit;
+  }
+  if (filter?.offset) {
+    options['skip'] = filter.offset;
+  }
+  return options;
 }

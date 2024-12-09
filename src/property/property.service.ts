@@ -14,11 +14,7 @@ export class PropertyService {
   ) {}
 
   async getProperties(filter?: PropertyFilterInput): Promise<Property[] | []> {
-    const options = filterProperties(filter);
-    if (filter?.limit) {
-      options['take'] = filter.limit;
-    }
-    return await this.propertyRepository.find(options);
+    return await this.propertyRepository.find(filterProperties(filter));
   }
 
   async getProperty(id: string): Promise<Property> {
