@@ -1,8 +1,9 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { ExtraFeaturesType } from './extra-features.object.type';
-import { RentalPeriodType } from './rental-period.object.type';
-import { ContactDetailsType } from './contact-details.object.type';
-import { OrderDetailsType } from './order-details.object.type';
+import { ExtraFeaturesType } from './object-types/extra-features.object.type';
+import { RentalPeriodType } from './object-types/rental-period.object.type';
+import { ContactDetailsType } from './object-types/contact-details.object.type';
+import { OrderDetailsType } from './object-types/order-details.object.type';
+import { PropertyType } from '../property/property.type';
 
 @ObjectType('Order')
 export class OrderType {
@@ -11,6 +12,9 @@ export class OrderType {
 
   @Field(() => ID)
   propertyId: string;
+
+  @Field(() => PropertyType)
+  property: PropertyType;
 
   @Field(() => [ExtraFeaturesType])
   extraFeaturesSelected: ExtraFeaturesType[];
