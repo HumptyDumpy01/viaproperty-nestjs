@@ -57,4 +57,7 @@ export class Property {
 
   @Column()
   createdAt: string;
+
+  @Column({ default: true })
+  active: boolean;
 }

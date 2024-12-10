@@ -28,5 +28,7 @@ export function filterProperties(filter: PropertyFilterInput) {
   if (filter?.offset) {
     options['skip'] = filter.offset;
   }
+  // find only active properties
+  options.where.active = true;
   return options;
 }

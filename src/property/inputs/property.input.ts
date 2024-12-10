@@ -80,4 +80,7 @@ export class PropertyInput {
   @IsDateString()
   @Field()
   createdAt: string;
+
+  @Field({ defaultValue: true })
+  active: boolean;
 }
