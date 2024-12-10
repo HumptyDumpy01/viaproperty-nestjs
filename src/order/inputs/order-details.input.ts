@@ -9,10 +9,6 @@ export class OrderDetailsInput {
   @IsUUID()
   customerId: string;
 
-  @Field(() => ID)
-  @IsUUID()
-  landlordId: string;
-
   @Field(() => OrderStatus)
   status: OrderStatus;
 

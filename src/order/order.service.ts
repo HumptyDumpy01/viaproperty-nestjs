@@ -32,15 +32,12 @@ export class OrderService {
       );
     }
 
-    const { customerId, landlordId } = createOrderInput.orderDetails;
+    const { customerId } = createOrderInput.orderDetails;
 
     const customer = await this.authService.getUserData(customerId);
-    const landlord = await this.authService.getUserData(landlordId);
 
-    if (!customer || !landlord) {
-      throw new NotFoundException(
-        showErrorMessage(`Customer or Landlord not found`),
-      );
+    if (!customer) {
+      throw new NotFoundException(showErrorMessage(`Customer not found`));
     }
 
     const newOrder = {

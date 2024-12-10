@@ -7,9 +7,6 @@ export class OrderDetailsType {
   @Field(() => ID)
   customerId: string;
 
-  @Field(() => ID)
-  landlordId: string;
-
   @Field(() => OrderStatus)
   status: OrderStatus;
 
