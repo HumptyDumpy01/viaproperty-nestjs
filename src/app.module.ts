@@ -19,6 +19,8 @@ import { PropertyCommentsModule } from './property-comments/property-comments.mo
 import { PropertyComments } from './property-comments/property-comments.entity';
 import { PropertyQuestionsModule } from './property-questions/property-questions.module';
 import { PropertyQuestions } from './property-questions/property-questions.entity';
+import { OrderModule } from './order/order.module';
+import { Order } from './order/order.entity';
 
 dotenv.config({
   // path to .env.config
@@ -41,6 +43,7 @@ dotenv.config({
         Newsletter,
         PropertyComments,
         PropertyQuestions,
+        Order,
       ],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -55,6 +58,7 @@ dotenv.config({
     NewsletterModule,
     PropertyCommentsModule,
     PropertyQuestionsModule,
+    OrderModule,
   ],
   controllers: [],
   providers: [],
