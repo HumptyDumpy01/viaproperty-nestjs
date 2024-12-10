@@ -1,1 +1,6 @@
-export type OrderType = `pending` | `complete` | `refunded` | `rejected`;
+export type OrderType =
+  | `pending`
+  | `complete`
+  | `refunded`
+  | `rejected`
+  | `incomplete`;

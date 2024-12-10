@@ -5,6 +5,7 @@ export enum OrderStatus {
   COMPLETE = 'complete',
   REFUNDED = 'refunded',
   REJECTED = 'rejected',
+  INCOMPLETE = 'incomplete',
 }
 
 registerEnumType(OrderStatus, {

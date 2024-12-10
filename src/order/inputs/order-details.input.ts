@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
 import { OrderStatus } from '../enums/order.status.enum';
-import { IsDateString, IsNotEmpty, IsUUID } from 'class-validator';
+import { IsDateString, IsUUID } from 'class-validator';
 import { OrderDetailsExtraInput } from './order-details.extra.input';
 
 @InputType()
@@ -18,10 +18,6 @@ export class OrderDetailsInput {
 
   @Field(() => OrderDetailsExtraInput)
   extra: OrderDetailsExtraInput;
-
-  @Field()
-  @IsNotEmpty()
-  totalPricing: string;
 
   @Field()
   @IsDateString()

@@ -1,7 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { ExtraFeaturesType } from './extra-features.object.type';
 import { RentalPeriodType } from './rental-period.object.type';
-import { PricingType } from './overall-pricing.object.type';
 import { ContactDetailsType } from './contact-details.object.type';
 import { OrderDetailsType } from './order-details.object.type';
 
@@ -19,8 +18,8 @@ export class OrderType {
   @Field(() => RentalPeriodType, { nullable: true })
   rentalPeriod: string;
 
-  @Field(() => [PricingType])
-  overallPricing: PricingType[];
+  @Field(() => Number)
+  totalPrice: number;
 
   @Field(() => ContactDetailsType)
   contactDetails: ContactDetailsType;
