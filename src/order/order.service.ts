@@ -47,6 +47,7 @@ export class OrderService {
       ...createOrderInput,
       id: uuid(),
       extraFeaturesSelected: createOrderInput.extraFeaturesSelected || null,
+      paid: false,
       rentalPeriod: createOrderInput.rentalPeriod,
     };
 

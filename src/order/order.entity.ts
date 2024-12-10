@@ -17,6 +17,9 @@ export class Order {
   propertyId: string;
 
   @Column()
+  paid: boolean;
+
+  @Column()
   extraFeaturesSelected: ExtraFeaturesInterface[];
 
   @Column()

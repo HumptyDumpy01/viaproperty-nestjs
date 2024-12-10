@@ -13,7 +13,7 @@ export class OrderDetailsExtraInput {
   @IsBoolean()
   refundRequested: boolean;
 
-  @Field(() => String, { defaultValue: new Date().toISOString() })
+  @Field(() => String, { defaultValue: null })
   @IsDateString()
   date: string;
 }
