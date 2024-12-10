@@ -21,8 +21,7 @@ export class PropertyService {
     return await this.propertyRepository.findOne({ where: { id } });
   }
 
-  async createPropertyAdvert(propertyInput: PropertyInput): Promise<any> {
-    // @ts-ignore
+  async createPropertyAdvert(propertyInput: PropertyInput): Promise<Property> {
     const newProperty = this.propertyRepository.create(propertyInput);
     return await this.propertyRepository.save(newProperty);
   }

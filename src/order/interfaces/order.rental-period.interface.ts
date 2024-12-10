@@ -1,4 +1,4 @@
 export interface RentalPeriodInterface {
-  from: Date;
-  to: Date;
+  from: string;
+  to: string;
 }

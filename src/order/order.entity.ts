@@ -17,7 +17,7 @@ export class Order {
   propertyId: string;
 
   @Column()
-  extraFeaturesSelected: ExtraFeaturesInterface[] | null;
+  extraFeaturesSelected: ExtraFeaturesInterface[];
 
   @Column()
   rentalPeriod: RentalPeriodInterface;
@@ -26,7 +26,7 @@ export class Order {
   overallPricing: PricingInterface[];
 
   @Column()
-  contactDetails: ContactDetailsInterface[];
+  contactDetails: ContactDetailsInterface;
 
   @Column()
   orderDetails: OrderDetailsInterface;
