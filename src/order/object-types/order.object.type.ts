@@ -13,8 +13,8 @@ export class OrderType {
   @Field(() => ID)
   propertyId: string;
 
-  @Field(() => ExtraFeaturesType, { nullable: true })
-  extraFeaturesSelected: ExtraFeaturesType;
+  @Field(() => [ExtraFeaturesType])
+  extraFeaturesSelected: ExtraFeaturesType[];
 
   @Field(() => RentalPeriodType, { nullable: true })
   rentalPeriod: string;

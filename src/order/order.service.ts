@@ -12,6 +12,10 @@ export class OrderService {
     private orderRepository: Repository<Order>,
   ) {}
 
+  async getAllOrders(): Promise<Order[]> {
+    return this.orderRepository.find();
+  }
+
   async createOrder(createOrderInput: CreateOrderInput): Promise<Order> {
     const newOrder = {
       ...createOrderInput,
