@@ -64,6 +64,9 @@ class ContactInput {
 
   @Field(() => [String])
   phones: string[];
+
+  @Field(() => String)
+  email: string;
 }
 
 @InputType()

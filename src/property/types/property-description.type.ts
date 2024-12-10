@@ -53,6 +53,9 @@ class Contact {
 
   @Field(() => [String])
   phones: string[];
+
+  @Field(() => String)
+  email: string;
 }
 
 @ObjectType()
