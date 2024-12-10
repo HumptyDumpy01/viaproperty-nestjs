@@ -24,6 +24,11 @@ export class OrderResolver {
     return this.orderService.getAllOrders();
   }
 
+  @Query(() => OrderType)
+  getOrderData(@Args(`orderId`) orderId: string) {
+    return this.orderService.getOrderData(orderId);
+  }
+
   @Mutation(() => OrderType)
   createOrder(@Args(`createOrderInput`) createOrderInput: CreateOrderInput) {
     return this.orderService.createOrder(createOrderInput);

@@ -21,6 +21,10 @@ export class OrderService {
     return this.orderRepository.find();
   }
 
+  async getOrderData(orderId: string): Promise<Order> {
+    return this.orderRepository.findOne({ where: { id: orderId } });
+  }
+
   async createOrder(createOrderInput: CreateOrderInput): Promise<Order> {
     const { propertyId } = createOrderInput;
 
