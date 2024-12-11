@@ -2,6 +2,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserType } from './user.type';
 import { AuthService } from './auth.service';
 import { UserInput } from './user.input';
+import { LoginResponse } from './object-types/login-response.object.type';
 
 // Specify the type of the resolver to which it would be attached.
 @Resolver((of) => UserType)
@@ -21,6 +22,20 @@ export class AuthResolver {
   ) {
     // USE A SERVICE HERE. INJECT IT AS A DEP ONTO THIS CLASS
     return this.authService.createUser(userInput, confirmPassword);
+  }
+
+  @Mutation((returns) => LoginResponse)
+  async login(
+    @Args(`email`) email: string,
+    @Args(`password`) password: string,
+  ) {
+    const user = await this.authService.validateUserByEmailAndPassword(
+      email,
+      password,
+    );
+
+    const { accessToken } = await this.authService.login(user);
+    return { accessToken };
   }
 
   // INFO: POST-HOOKS IN GRAPH-QL
