@@ -49,6 +49,9 @@ dotenv.config({
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
+      subscriptions: {
+        'graphql-ws': true,
+      },
     }),
     PropertyModule,
     AuthModule,
