@@ -23,7 +23,6 @@ import { OrderModule } from './order/order.module';
 import { Order } from './order/order.entity';
 
 dotenv.config({
-  // path to .env.config
   path: `${__dirname}/../../config.env`,
 });
 
@@ -51,6 +50,7 @@ dotenv.config({
       autoSchemaFile: true,
       subscriptions: {
         'graphql-ws': true,
+        'subscriptions-transport-ws': true, // Ensure backward compatibility
       },
     }),
     PropertyModule,

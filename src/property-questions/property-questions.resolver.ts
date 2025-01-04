@@ -40,11 +40,12 @@ export class PropertyQuestionsResolver {
       propertyQuestionInput,
     );
     await pubSub.publish('questionAdded', { questionAdded: question });
+
     return question;
   }
 
   @Subscription(() => PropertyQuestionsType, {
-    resolve: (value) => value,
+    resolve: (payload) => payload.questionAdded, // Use payload to extract the published data
   })
   questionAdded() {
     return pubSub.asyncIterator('questionAdded');
