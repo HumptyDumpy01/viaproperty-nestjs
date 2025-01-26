@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PropertyQuestions } from './property-questions.entity';
 import { PropertyQuestionInput } from './inputs/property-question.input';
@@ -10,6 +14,7 @@ import { AuthService } from '../auth/auth.service';
 import { PropertyReplyInput } from '../property-comments/inputs/property-reply.input';
 import { PropertyRepliesInterface } from '../property-comments/interfaces/property-replies.interface';
 import { PropertyQuestionsGateway } from './property-questions.gateway';
+import { JWTPayloadType } from '../auth/auth.guard';
 
 @Injectable()
 export class PropertyQuestionsService {
@@ -100,5 +105,53 @@ export class PropertyQuestionsService {
     return newReply;
   }
 
-  likeQuestionComment(commentId: string, userEmail: string) {}
+  async likeQuestion(questionId: string, userPayload: JWTPayloadType) {
+    // push newReply into replies an array of comment
+    const propertyQuestion = await this.propertyQuestionsRepository.findOne({
+      where: { id: questionId },
+    });
+
+    if (!propertyQuestion) {
+      throw new NotFoundException(
+        showErrorMessage(`Comment with id ${questionId} not found`),
+      );
+    }
+
+    const questionLikes = propertyQuestion.likes;
+    if (questionLikes.includes(userPayload.email)) {
+      throw new BadRequestException(
+        showErrorMessage(`User already liked the question`),
+      );
+    }
+    // update likes array
+    questionLikes.push(userPayload.email);
+    propertyQuestion.likes = questionLikes;
+    return await this.propertyQuestionsRepository.save(propertyQuestion);
+  }
+
+  async unlikeQuestion(questionId: string, userPayload: JWTPayloadType) {
+    // push newReply into replies an array of comment
+    const propertyQuestion = await this.propertyQuestionsRepository.findOne({
+      where: { id: questionId },
+    });
+
+    if (!propertyQuestion) {
+      throw new NotFoundException(
+        showErrorMessage(`Comment with id ${questionId} not found`),
+      );
+    }
+
+    const questionLikes = propertyQuestion.likes;
+    if (!questionLikes.includes(userPayload.email)) {
+      throw new BadRequestException(
+        showErrorMessage(`User did not like the question.`),
+      );
+    }
+    const updatedQuestionLikes = questionLikes.filter(
+      (like) => like !== userPayload.email,
+    );
+    // update likes array
+    propertyQuestion.likes = updatedQuestionLikes;
+    return await this.propertyQuestionsRepository.save(propertyQuestion);
+  }
 }

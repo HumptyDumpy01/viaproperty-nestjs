@@ -1,5 +1,6 @@
 import {
   Args,
+  Context,
   Mutation,
   Parent,
   Query,
@@ -15,6 +16,8 @@ import { AuthService } from '../auth/auth.service';
 import { PropertyReplyInput } from '../property-comments/inputs/property-reply.input';
 import { PropertyQuestionRepliesObjectType } from './object-types/property-question-reply.object.type';
 import { PubSub } from 'graphql-subscriptions';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from '../auth/auth.guard';
 
 const pubSub = new PubSub();
 
@@ -57,6 +60,30 @@ export class PropertyQuestionsResolver {
   ) {
     return this.propertyQuestionsService.createReplyOnQuestion(
       propertyReplyInput,
+    );
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation(() => PropertyQuestionsType)
+  likeQuestion(
+    @Args('questionId') questionId: string,
+    @Context() context: any,
+  ) {
+    return this.propertyQuestionsService.likeQuestion(
+      questionId,
+      context.req.user,
+    );
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation(() => PropertyQuestionsType)
+  unlikeQuestion(
+    @Args('questionId') questionId: string,
+    @Context() context: any,
+  ) {
+    return this.propertyQuestionsService.unlikeQuestion(
+      questionId,
+      context.req.user,
     );
   }
 
