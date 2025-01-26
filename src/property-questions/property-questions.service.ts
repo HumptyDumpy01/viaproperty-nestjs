@@ -13,9 +13,12 @@ import { PropertyService } from '../property/property.service';
 import { AuthService } from '../auth/auth.service';
 import { PropertyReplyInput } from '../property-comments/inputs/property-reply.input';
 import { PropertyRepliesInterface } from '../property-comments/interfaces/property-replies.interface';
-import { PropertyQuestionsGateway } from './property-questions.gateway';
 import { JWTPayloadType } from '../auth/auth.guard';
 import { UserTypeEnum } from '../property-comments/enums/user-type.enum';
+import { PropertyQuestionsGateway } from './property-questions.gateway';
+import { PubSub } from 'graphql-subscriptions';
+
+const pubSub = new PubSub();
 
 @Injectable()
 export class PropertyQuestionsService {
@@ -67,8 +70,6 @@ export class PropertyQuestionsService {
     const newQuestion =
       this.propertyQuestionsRepository.create(newQuestionData);
 
-    this.propertyQuestionsGateway.notifyNewQuestion(newQuestion);
-
     return await this.propertyQuestionsRepository.save(newQuestion);
   }
 
@@ -116,6 +117,9 @@ export class PropertyQuestionsService {
 
     propertyComment.replies.push(newReply);
     await this.propertyQuestionsRepository.save(propertyComment);
+
+    await pubSub.publish('newReply', { newReply });
+
     return newReply;
   }
 

@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { TransformInterceptor } from '../transform.interceptor';
 import { ValidationPipe } from '@nestjs/common';
 import * as process from 'node:process';
 
@@ -12,7 +11,9 @@ import * as process from 'node:process';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
-  app.useGlobalInterceptors(new TransformInterceptor());
+  /* IMPORTANT: THESE LINES OF CODE BLOCKED MY WEBSOCKET CONNECTION. GARN IT! */
+  /*app.useGlobalInterceptors(new TransformInterceptor());
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));*/
 
   app.enableCors({
     origin: `*`,

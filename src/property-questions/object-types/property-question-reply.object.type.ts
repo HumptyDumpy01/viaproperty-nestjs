@@ -2,7 +2,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { IsDateString, IsUUID } from 'class-validator';
 import { UserTypeEnum } from '../../property-comments/enums/user-type.enum';
 
-@ObjectType()
+@ObjectType('PropertyQuestionRepliesObjectType')
 export class PropertyQuestionRepliesObjectType {
   @Field(() => ID)
   @IsUUID()
