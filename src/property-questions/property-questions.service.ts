@@ -75,7 +75,7 @@ export class PropertyQuestionsService {
     const propertyComment = await this.propertyQuestionsRepository.findOne({
       where: { id: commentId },
     });
-    const user = await this.authService.getUserData(replierId);
+    const user = this.authService.getUserData(replierId);
 
     if (!propertyComment) {
       throw new NotFoundException(
@@ -99,4 +99,6 @@ export class PropertyQuestionsService {
     await this.propertyQuestionsRepository.save(propertyComment);
     return newReply;
   }
+
+  likeQuestionComment(commentId: string, userEmail: string) {}
 }

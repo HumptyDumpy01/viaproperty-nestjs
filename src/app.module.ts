@@ -21,6 +21,7 @@ import { PropertyQuestionsModule } from './property-questions/property-questions
 import { PropertyQuestions } from './property-questions/property-questions.entity';
 import { OrderModule } from './order/order.module';
 import { Order } from './order/order.entity';
+import { AuthGuard } from './auth/auth.guard';
 
 dotenv.config({
   path: `${__dirname}/../../config.env`,
@@ -64,6 +65,6 @@ dotenv.config({
     OrderModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [AuthGuard],
 })
 export class AppModule {}
