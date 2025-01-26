@@ -1,5 +1,6 @@
 import {
   Args,
+  Context,
   Mutation,
   Parent,
   Query,
@@ -13,6 +14,8 @@ import { UserType } from '../auth/user.type';
 import { AuthService } from '../auth/auth.service';
 import { PropertyReplyInput } from './inputs/property-reply.input';
 import { PropertyCommentRepliesObjectType } from './object-types/property-comment-replies.object.type';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from '../auth/auth.guard';
 
 // Specify the type of the resolver to which it would be attached.
 @Resolver((of) => PropertyCommentsType)
@@ -35,11 +38,16 @@ export class PropertyCommentsResolver {
     return this.propertyCommentsService.createComment(propertyCommentInput);
   }
 
+  @UseGuards(AuthGuard)
   @Mutation((returns) => PropertyCommentsType)
   createReply(
     @Args('propertyReplyInput') propertyReplyInput: PropertyReplyInput,
+    @Context() context: any,
   ) {
-    return this.propertyCommentsService.createReply(propertyReplyInput);
+    return this.propertyCommentsService.createReply(
+      propertyReplyInput,
+      context.req.user,
+    );
   }
 
   @ResolveField(() => UserType)

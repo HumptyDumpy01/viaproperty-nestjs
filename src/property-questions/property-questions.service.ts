@@ -15,6 +15,7 @@ import { PropertyReplyInput } from '../property-comments/inputs/property-reply.i
 import { PropertyRepliesInterface } from '../property-comments/interfaces/property-replies.interface';
 import { PropertyQuestionsGateway } from './property-questions.gateway';
 import { JWTPayloadType } from '../auth/auth.guard';
+import { UserTypeEnum } from '../property-comments/enums/user-type.enum';
 
 @Injectable()
 export class PropertyQuestionsService {
@@ -73,14 +74,30 @@ export class PropertyQuestionsService {
 
   async createReplyOnQuestion(
     propertyReplyInput: PropertyReplyInput,
+    user: JWTPayloadType,
   ): Promise<PropertyRepliesInterface> {
-    const { commentId, replierId } = propertyReplyInput;
+    const { commentId, propertyId } = propertyReplyInput;
 
+    const property = await this.propertyService.getProperty(propertyId);
+
+    if (!property) {
+      throw new NotFoundException(
+        showErrorMessage(`Property with ${propertyId} does not exist.`),
+      );
+    }
+
+    let userType: UserTypeEnum;
+
+    if (property.landlordId !== user.id) {
+      userType = UserTypeEnum.USER;
+    }
+    if (property.landlordId === user.id) {
+      userType = UserTypeEnum.LANDLORD;
+    }
     // push newReply into replies an array of comment
     const propertyComment = await this.propertyQuestionsRepository.findOne({
       where: { id: commentId },
     });
-    const user = this.authService.getUserData(replierId);
 
     if (!propertyComment) {
       throw new NotFoundException(
@@ -88,14 +105,11 @@ export class PropertyQuestionsService {
       );
     }
 
-    if (!user) {
-      throw new NotFoundException(
-        showErrorMessage(`User with id ${replierId} not found`),
-      );
-    }
-
     const newReply = {
       ...propertyReplyInput,
+      replierId: user.id,
+      userType,
+      replierInitials: user.initials,
       id: uuid(),
       createdAt: new Date().toISOString(),
     };

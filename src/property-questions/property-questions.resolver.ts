@@ -35,6 +35,7 @@ export class PropertyQuestionsResolver {
     );
   }
 
+  @UseGuards(AuthGuard)
   @Mutation(() => PropertyQuestionsType)
   async createPropertyQuestion(
     @Args('propertyQuestionInput') propertyQuestionInput: PropertyQuestionInput,
@@ -54,12 +55,15 @@ export class PropertyQuestionsResolver {
     return pubSub.asyncIterator('questionAdded');
   }
 
+  @UseGuards(AuthGuard)
   @Mutation(() => PropertyQuestionsType)
   createReplyOnQuestion(
     @Args('propertyReplyInput') propertyReplyInput: PropertyReplyInput,
+    @Context() context: any,
   ) {
     return this.propertyQuestionsService.createReplyOnQuestion(
       propertyReplyInput,
+      context.req.user,
     );
   }
 

@@ -9,6 +9,8 @@ import { AuthService } from '../auth/auth.service';
 import { showErrorMessage } from '../../utils/functions/showErrorMessage';
 import { PropertyReplyInput } from './inputs/property-reply.input';
 import { PropertyRepliesInterface } from './interfaces/property-replies.interface';
+import { JWTPayloadType } from '../auth/auth.guard';
+import { UserTypeEnum } from './enums/user-type.enum';
 
 @Injectable()
 export class PropertyCommentsService {
@@ -59,14 +61,31 @@ export class PropertyCommentsService {
 
   async createReply(
     propertyReplyInput: PropertyReplyInput,
+    user: JWTPayloadType,
   ): Promise<PropertyRepliesInterface> {
-    const { commentId, replierId } = propertyReplyInput;
+    const { commentId, propertyId } = propertyReplyInput;
+
+    const property = await this.propertyService.getProperty(propertyId);
+
+    if (!property) {
+      throw new NotFoundException(
+        showErrorMessage(`Property with ${propertyId} does not exist.`),
+      );
+    }
+
+    let userType: UserTypeEnum;
+
+    if (property.landlordId !== user.id) {
+      userType = UserTypeEnum.USER;
+    }
+    if (property.landlordId === user.id) {
+      userType = UserTypeEnum.LANDLORD;
+    }
 
     // push newReply into replies an array of comment
     const propertyComment = await this.propertyCommentsRepository.findOne({
       where: { id: commentId },
     });
-    const user = await this.authService.getUserData(replierId);
 
     if (!propertyComment) {
       throw new NotFoundException(
@@ -74,14 +93,10 @@ export class PropertyCommentsService {
       );
     }
 
-    if (!user) {
-      throw new NotFoundException(
-        showErrorMessage(`User with id ${replierId} not found`),
-      );
-    }
-
     const newReply = {
       ...propertyReplyInput,
+      userType,
+      replierInitials: user.initials,
       id: uuid(),
       createdAt: new Date().toISOString(),
     };
