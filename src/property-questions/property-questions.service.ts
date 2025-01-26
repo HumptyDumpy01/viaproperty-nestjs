@@ -168,4 +168,19 @@ export class PropertyQuestionsService {
     propertyQuestion.likes = updatedQuestionLikes;
     return await this.propertyQuestionsRepository.save(propertyQuestion);
   }
+
+  async getPropertyQuestionById(questionId: string) {
+    // push newReply into replies an array of comment
+    const propertyQuestion = await this.propertyQuestionsRepository.findOne({
+      where: { id: questionId },
+    });
+
+    if (!propertyQuestion) {
+      throw new NotFoundException(
+        showErrorMessage(`Comment with id ${questionId} not found`),
+      );
+    }
+
+    return propertyQuestion;
+  }
 }

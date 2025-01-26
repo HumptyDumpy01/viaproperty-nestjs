@@ -36,6 +36,12 @@ export class PropertyQuestionsResolver {
   }
 
   @UseGuards(AuthGuard)
+  @Query(() => PropertyQuestionsType)
+  getPropertyQuestionById(@Args('questionId') questionId: string) {
+    return this.propertyQuestionsService.getPropertyQuestionById(questionId);
+  }
+
+  @UseGuards(AuthGuard)
   @Mutation(() => PropertyQuestionsType)
   async createPropertyQuestion(
     @Args('propertyQuestionInput') propertyQuestionInput: PropertyQuestionInput,
