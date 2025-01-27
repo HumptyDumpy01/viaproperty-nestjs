@@ -11,6 +11,9 @@ export class PropertyQuestionRepliesObjectType {
   @Field(() => UserTypeEnum)
   userType: UserTypeEnum;
 
+  @Field(() => ID)
+  commentId: string;
+
   @Field(() => String)
   comment: string;
 

@@ -108,6 +108,7 @@ export class PropertyQuestionsService {
 
     const newReply = {
       ...propertyReplyInput,
+      commentId: commentId,
       replierId: user.id,
       userType,
       replierInitials: user.initials,

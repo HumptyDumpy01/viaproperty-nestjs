@@ -8,6 +8,10 @@ export class PropertyCommentRepliesObjectType {
   @IsUUID()
   id: string;
 
+  @Field(() => ID)
+  @IsUUID()
+  commentId: string;
+
   @Field(() => UserTypeEnum)
   userType: UserTypeEnum;
 
