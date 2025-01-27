@@ -39,6 +39,19 @@ export class PropertyCommentsService {
         showErrorMessage(`Property with id ${propertyId} not found`),
       );
     }
+    const overallRating = Number(
+      (
+        (propertyCommentInput.rated.location +
+          propertyCommentInput.rated.security +
+          propertyCommentInput.rated.amenities +
+          propertyCommentInput.rated.noiseLevel +
+          propertyCommentInput.rated.ownership +
+          propertyCommentInput.rated.condition) /
+        6
+      ).toFixed(2),
+    );
+
+    propertyCommentInput.rated.overall = overallRating;
 
     const newCommentData = {
       ...propertyCommentInput,
@@ -49,6 +62,22 @@ export class PropertyCommentsService {
       createdAt: new Date().toISOString(),
     };
     const newComment = this.propertyCommentsRepository.create(newCommentData);
+
+    const { location, security, amenities, noiseLevel, condition, ownership } =
+      propertyCommentInput.rated;
+
+    await this.propertyService.updatePropertyRating(
+      {
+        location,
+        security,
+        amenities,
+        noiseLevel,
+        condition,
+        ownership,
+      },
+      propertyId,
+    );
+
     return await this.propertyCommentsRepository.save(newComment);
   }
 
