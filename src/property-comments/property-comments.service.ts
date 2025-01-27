@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PropertyComments } from './property-comments.entity';
 import { Repository } from 'typeorm';
@@ -126,5 +130,55 @@ export class PropertyCommentsService {
     propertyComment.replies.push(newReply);
     await this.propertyCommentsRepository.save(propertyComment);
     return newReply;
+  }
+
+  async likePropertyReview(reviewId: string, userPayload: JWTPayloadType) {
+    // push newReply into replies an array of comment
+    const propertyReview = await this.propertyCommentsRepository.findOne({
+      where: { id: reviewId },
+    });
+
+    if (!propertyReview) {
+      throw new NotFoundException(
+        showErrorMessage(`Comment with id ${reviewId} not found`),
+      );
+    }
+
+    const propertyReviewLikes = propertyReview.likes;
+    if (propertyReviewLikes.includes(userPayload.email)) {
+      throw new BadRequestException(
+        showErrorMessage(`User already liked the question`),
+      );
+    }
+    // update likes array
+    propertyReviewLikes.push(userPayload.email);
+    propertyReview.likes = propertyReviewLikes;
+    return await this.propertyCommentsRepository.save(propertyReview);
+  }
+
+  async unlikePropertyReview(reviewId: string, userPayload: JWTPayloadType) {
+    // push newReply into replies an array of comment
+    const propertyReview = await this.propertyCommentsRepository.findOne({
+      where: { id: reviewId },
+    });
+
+    if (!propertyReview) {
+      throw new NotFoundException(
+        showErrorMessage(`Comment with id ${reviewId} not found`),
+      );
+    }
+
+    const reviewLikes = propertyReview.likes;
+    if (!reviewLikes.includes(userPayload.email)) {
+      throw new BadRequestException(
+        showErrorMessage(`User did not like the question.`),
+      );
+    }
+    const updatedReviewLikes = reviewLikes.filter(
+      (like) => like !== userPayload.email,
+    );
+    // update likes array
+    propertyReview.likes = updatedReviewLikes;
+    return await this.propertyCommentsRepository.save(propertyReview);
   }
 }

@@ -55,6 +55,32 @@ export class PropertyCommentsResolver {
     );
   }
 
+  @UseGuards(AuthGuard)
+  @Mutation((_returns) => PropertyCommentsType)
+  likePropertyReview(
+    @Args('reviewId')
+    reviewId: string,
+    @Context() context: any,
+  ) {
+    return this.propertyCommentsService.likePropertyReview(
+      reviewId,
+      context.req.user,
+    );
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation((_returns) => PropertyCommentsType)
+  unlikePropertyReview(
+    @Args('reviewId')
+    reviewId: string,
+    @Context() context: any,
+  ) {
+    return this.propertyCommentsService.unlikePropertyReview(
+      reviewId,
+      context.req.user,
+    );
+  }
+
   @ResolveField(() => UserType)
   async replier(
     @Parent() propertyCommentRepliesType: PropertyCommentRepliesObjectType,
