@@ -31,11 +31,16 @@ export class PropertyCommentsResolver {
   }
 
   // example of usage (mutation)
+  @UseGuards(AuthGuard)
   @Mutation((returns) => PropertyCommentsType)
   createComment(
     @Args('propertyCommentInput') propertyCommentInput: PropertyCommentInput,
+    @Context() context: any,
   ) {
-    return this.propertyCommentsService.createComment(propertyCommentInput);
+    return this.propertyCommentsService.createComment(
+      propertyCommentInput,
+      context.req.user,
+    );
   }
 
   @UseGuards(AuthGuard)

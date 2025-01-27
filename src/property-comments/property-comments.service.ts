@@ -5,7 +5,6 @@ import { Repository } from 'typeorm';
 import { PropertyCommentInput } from './inputs/property-comment.input';
 import { v4 as uuid } from 'uuid';
 import { PropertyService } from '../property/property.service';
-import { AuthService } from '../auth/auth.service';
 import { showErrorMessage } from '../../utils/functions/showErrorMessage';
 import { PropertyReplyInput } from './inputs/property-reply.input';
 import { PropertyRepliesInterface } from './interfaces/property-replies.interface';
@@ -18,7 +17,6 @@ export class PropertyCommentsService {
     @InjectRepository(PropertyComments)
     private propertyCommentsRepository: Repository<PropertyComments>,
     private propertyService: PropertyService,
-    private authService: AuthService,
   ) {}
 
   async propertyComments(propertyId: string): Promise<PropertyComments[] | []> {
@@ -29,8 +27,10 @@ export class PropertyCommentsService {
 
   async createComment(
     propertyCommentInput: PropertyCommentInput,
+    userData: JWTPayloadType,
   ): Promise<PropertyComments> {
-    const { propertyId, userId } = propertyCommentInput;
+    const { propertyId } = propertyCommentInput;
+    const { id: userId } = userData;
 
     const property = await this.propertyService.getProperty(propertyId);
 
@@ -40,16 +40,9 @@ export class PropertyCommentsService {
       );
     }
 
-    const user = await this.authService.getUserData(userId);
-
-    if (!user) {
-      throw new NotFoundException(
-        showErrorMessage(`User with id ${userId} not found`),
-      );
-    }
-
     const newCommentData = {
       ...propertyCommentInput,
+      userId,
       id: uuid(),
       likes: [],
       replies: [],
