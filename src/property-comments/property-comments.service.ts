@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   Injectable,
-  NotAcceptableException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -100,15 +99,20 @@ export class PropertyCommentsService {
       );
     }
 
-    if (property.landlordId !== user.id) {
+    /* INFO: FOR PRACTICE PURPOSES I REMOVED THIS RESTRICTION AND IMPLEMENT
+     *   WS CONNECTION REGARDING ADDING A NEW PROPERTY REVIEW REPLY AS WELL. */
+    /*if (property.landlordId !== user.id) {
       throw new NotAcceptableException(
         showErrorMessage(
           `Only the landlord of his property advert can reply on reviews.`,
         ),
       );
-    }
+    }*/
 
-    const userType = UserTypeEnum.LANDLORD;
+    const userType =
+      user.id === property.landlordId
+        ? UserTypeEnum.LANDLORD
+        : UserTypeEnum.USER;
 
     // push newReply into replies an array of comment
     const propertyComment = await this.propertyCommentsRepository.findOne({

@@ -87,14 +87,11 @@ export class PropertyQuestionsService {
       );
     }
 
-    let userType: UserTypeEnum;
+    const userType: UserTypeEnum =
+      property.landlordId === user.id
+        ? UserTypeEnum.LANDLORD
+        : UserTypeEnum.USER;
 
-    if (property.landlordId !== user.id) {
-      userType = UserTypeEnum.USER;
-    }
-    if (property.landlordId === user.id) {
-      userType = UserTypeEnum.LANDLORD;
-    }
     // push newReply into replies an array of comment
     const propertyQuestion = await this.propertyQuestionsRepository.findOne({
       where: { id: commentId },
