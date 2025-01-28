@@ -96,13 +96,21 @@ export class PropertyQuestionsService {
       userType = UserTypeEnum.LANDLORD;
     }
     // push newReply into replies an array of comment
-    const propertyComment = await this.propertyQuestionsRepository.findOne({
+    const propertyQuestion = await this.propertyQuestionsRepository.findOne({
       where: { id: commentId },
     });
 
-    if (!propertyComment) {
+    if (!propertyQuestion) {
       throw new NotFoundException(
-        showErrorMessage(`Comment with id ${commentId} not found`),
+        showErrorMessage(`Question with id ${commentId} not found`),
+      );
+    }
+
+    if (propertyQuestion.propertyId !== propertyId) {
+      throw new NotFoundException(
+        showErrorMessage(
+          `Question with id ${commentId} is not corresponding to this property.`,
+        ),
       );
     }
 
@@ -116,8 +124,8 @@ export class PropertyQuestionsService {
       createdAt: new Date().toISOString(),
     };
 
-    propertyComment.replies.push(newReply);
-    await this.propertyQuestionsRepository.save(propertyComment);
+    propertyQuestion.replies.push(newReply);
+    await this.propertyQuestionsRepository.save(propertyQuestion);
 
     await pubSub.publish('newReply', { newReply });
 

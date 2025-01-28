@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  NotAcceptableException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -99,14 +100,15 @@ export class PropertyCommentsService {
       );
     }
 
-    let userType: UserTypeEnum;
-
     if (property.landlordId !== user.id) {
-      userType = UserTypeEnum.USER;
+      throw new NotAcceptableException(
+        showErrorMessage(
+          `Only the landlord of his property advert can reply on reviews.`,
+        ),
+      );
     }
-    if (property.landlordId === user.id) {
-      userType = UserTypeEnum.LANDLORD;
-    }
+
+    const userType = UserTypeEnum.LANDLORD;
 
     // push newReply into replies an array of comment
     const propertyComment = await this.propertyCommentsRepository.findOne({
@@ -119,9 +121,18 @@ export class PropertyCommentsService {
       );
     }
 
+    if (propertyComment.propertyId !== propertyId) {
+      throw new NotFoundException(
+        showErrorMessage(
+          `Review with id ${commentId} is not corresponding to this property.`,
+        ),
+      );
+    }
+
     const newReply = {
       ...propertyReplyInput,
       userType,
+      replierId: user.id,
       replierInitials: user.initials,
       id: uuid(),
       createdAt: new Date().toISOString(),
