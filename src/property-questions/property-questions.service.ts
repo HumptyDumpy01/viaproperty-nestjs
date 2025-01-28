@@ -15,7 +15,6 @@ import { PropertyReplyInput } from '../property-comments/inputs/property-reply.i
 import { PropertyRepliesInterface } from '../property-comments/interfaces/property-replies.interface';
 import { JWTPayloadType } from '../auth/auth.guard';
 import { UserTypeEnum } from '../property-comments/enums/user-type.enum';
-import { PropertyQuestionsGateway } from './property-questions.gateway';
 import { PubSub } from 'graphql-subscriptions';
 
 const pubSub = new PubSub();
@@ -27,7 +26,6 @@ export class PropertyQuestionsService {
     private propertyQuestionsRepository: Repository<PropertyQuestions>,
     private propertyService: PropertyService,
     private authService: AuthService,
-    private propertyQuestionsGateway: PropertyQuestionsGateway,
   ) {}
 
   async getPropertyQuestionsByPropId(

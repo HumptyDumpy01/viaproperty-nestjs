@@ -5,9 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PropertyComments } from './property-comments.entity';
 import { PropertyModule } from '../property/property.module';
 import { AuthModule } from '../auth/auth.module';
+import { PropertyCommentsGateway } from './property-comments.gateway';
 
 @Module({
-  providers: [PropertyCommentsService, PropertyCommentsResolver],
+  providers: [
+    PropertyCommentsService,
+    PropertyCommentsResolver,
+    PropertyCommentsGateway,
+  ],
   imports: [
     TypeOrmModule.forFeature([PropertyComments]),
     forwardRef(() => PropertyModule),

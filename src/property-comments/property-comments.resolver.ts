@@ -6,6 +6,7 @@ import {
   Query,
   ResolveField,
   Resolver,
+  Subscription,
 } from '@nestjs/graphql';
 import { PropertyCommentsType } from './property-comments.type';
 import { PropertyCommentsService } from './property-comments.service';
@@ -16,6 +17,9 @@ import { PropertyReplyInput } from './inputs/property-reply.input';
 import { PropertyCommentRepliesObjectType } from './object-types/property-comment-replies.object.type';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
+import { PubSub } from 'graphql-subscriptions';
+
+const pubSub = new PubSub();
 
 // Specify the type of the resolver to which it would be attached.
 @Resolver((of) => PropertyCommentsType)
@@ -45,14 +49,23 @@ export class PropertyCommentsResolver {
 
   @UseGuards(AuthGuard)
   @Mutation((returns) => PropertyCommentsType)
-  createReply(
+  async createReply(
     @Args('propertyReplyInput') propertyReplyInput: PropertyReplyInput,
     @Context() context: any,
   ) {
-    return this.propertyCommentsService.createReply(
+    const reply = this.propertyCommentsService.createReply(
       propertyReplyInput,
       context.req.user,
     );
+    await pubSub.publish('newReply', { newReply: reply });
+    return reply;
+  }
+
+  @Subscription(() => PropertyCommentRepliesObjectType, {
+    resolve: (payload) => payload.newReply,
+  })
+  newReviewReply() {
+    return pubSub.asyncIterator('newReply');
   }
 
   @UseGuards(AuthGuard)

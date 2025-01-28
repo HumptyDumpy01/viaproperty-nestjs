@@ -14,6 +14,9 @@ import { PropertyReplyInput } from './inputs/property-reply.input';
 import { PropertyRepliesInterface } from './interfaces/property-replies.interface';
 import { JWTPayloadType } from '../auth/auth.guard';
 import { UserTypeEnum } from './enums/user-type.enum';
+import { PubSub } from 'graphql-subscriptions';
+
+const pubSub = new PubSub();
 
 @Injectable()
 export class PropertyCommentsService {
@@ -144,6 +147,9 @@ export class PropertyCommentsService {
 
     propertyComment.replies.push(newReply);
     await this.propertyCommentsRepository.save(propertyComment);
+
+    await pubSub.publish(`newReply`, { newReply });
+
     return newReply;
   }
 
