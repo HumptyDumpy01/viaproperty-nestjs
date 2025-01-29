@@ -139,4 +139,10 @@ export class AuthService {
     await this.userRepository.save(user);
     return userWishlist;
   }
+
+  async getUserWishlist(userId: string) {
+    const user = await this.getUserData(userId);
+
+    return user.wishlist;
+  }
 }

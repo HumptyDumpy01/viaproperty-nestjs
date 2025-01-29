@@ -4,11 +4,16 @@ import { Wishlist } from './entities/wishlist.entity';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../../auth/auth.guard';
 import { UserWishlisted } from './entities/user-wishlisted.entity';
+import { PropertyService } from '../../property/property.service';
+import { ResolvedWishlist } from './entities/resolved-wishlist';
 
 @Resolver(() => Wishlist)
 @UseGuards(AuthGuard)
 export class WishlistResolver {
-  constructor(private readonly wishlistService: WishlistService) {}
+  constructor(
+    private readonly wishlistService: WishlistService,
+    private propertyService: PropertyService,
+  ) {}
 
   @Mutation(() => Wishlist)
   addPropertyIdToUserWishlist(
@@ -19,11 +24,6 @@ export class WishlistResolver {
       propertyId,
       context.req.user.id,
     );
-  }
-
-  @Query(() => [Wishlist])
-  findAll() {
-    return this.wishlistService.findAll();
   }
 
   @Query(() => Wishlist)
@@ -60,5 +60,13 @@ export class WishlistResolver {
         context.req.user.id,
       );
     return { wishlist: remainingWishlist };
+  }
+
+  @Query(() => ResolvedWishlist)
+  async getUserWishlist(@Context() context: any) {
+    const result = await this.wishlistService.getUserWishlist(
+      context.req.user.id,
+    );
+    return { resolvedWishlist: result };
   }
 }

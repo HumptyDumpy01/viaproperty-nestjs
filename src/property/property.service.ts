@@ -87,4 +87,13 @@ export class PropertyService {
 
     return await this.propertyRepository.save(property);
   }
+
+  async getPropertiesByIds(propertyIds: string[]): Promise<Property[]> {
+    // Fetch properties by UUIDs
+    const properties = await this.propertyRepository.find({
+      // @ts-ignore
+      where: { id: { $in: propertyIds } },
+    });
+    return properties;
+  }
 }

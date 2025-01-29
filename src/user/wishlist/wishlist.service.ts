@@ -17,8 +17,9 @@ export class WishlistService {
     return { wishlist: userWishlist };
   }
 
-  findAll() {
-    return `This action returns all wishlist`;
+  async getUserWishlist(userId: string) {
+    const propIds = await this.authService.getUserWishlist(userId);
+    return await this.propertyService.getPropertiesByIds(propIds);
   }
 
   async userAddedPropertyToWishlist(propertyId: string, userId: string) {
