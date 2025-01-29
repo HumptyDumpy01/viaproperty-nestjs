@@ -1,4 +1,8 @@
-import { Injectable, NotAcceptableException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotAcceptableException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
@@ -9,6 +13,8 @@ import { UserStatusEnum } from './enums/user-status.enum';
 import { v4 as uuid } from 'uuid';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { JwtService } from '@nestjs/jwt';
+import { showErrorMessage } from '../../utils/functions/showErrorMessage';
+import { PropertyService } from '../property/property.service';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +22,7 @@ export class AuthService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private jwtService: JwtService,
+    private propertyService: PropertyService,
   ) {}
 
   async getUserData(id: string): Promise<User> {
@@ -93,5 +100,24 @@ export class AuthService {
     };
     const accessToken = this.jwtService.sign(payload);
     return { accessToken };
+  }
+
+  async addPropertyIdToUserWishlist(propertyId: string, userId: string) {
+    // if not found, it returns an error
+    await this.propertyService.getProperty(propertyId);
+
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    const userWishlist = user.wishlist;
+
+    if (userWishlist.includes(propertyId)) {
+      throw new BadRequestException(
+        showErrorMessage('User already have this property wishlisted.'),
+      );
+    }
+
+    userWishlist.unshift(propertyId);
+    user.wishlist = userWishlist;
+    await this.userRepository.save(user);
+    return userWishlist;
   }
 }

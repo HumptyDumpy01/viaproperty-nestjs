@@ -27,6 +27,8 @@ export class PropertyCommentsService {
   ) {}
 
   async propertyComments(propertyId: string): Promise<PropertyComments[] | []> {
+    // if a property is not found, it returns an error
+    await this.propertyService.getProperty(propertyId);
     return await this.propertyCommentsRepository.find({
       where: { propertyId },
     });
@@ -39,13 +41,9 @@ export class PropertyCommentsService {
     const { propertyId } = propertyCommentInput;
     const { id: userId } = userData;
 
-    const property = await this.propertyService.getProperty(propertyId);
+    // if a property is not found, it returns an error
+    await this.propertyService.getProperty(propertyId);
 
-    if (!property) {
-      throw new NotFoundException(
-        showErrorMessage(`Property with id ${propertyId} not found`),
-      );
-    }
     const overallRating = Number(
       (
         (propertyCommentInput.rated.location +
@@ -94,13 +92,8 @@ export class PropertyCommentsService {
   ): Promise<PropertyRepliesInterface> {
     const { commentId, propertyId } = propertyReplyInput;
 
+    // if a property is not found, it returns an error
     const property = await this.propertyService.getProperty(propertyId);
-
-    if (!property) {
-      throw new NotFoundException(
-        showErrorMessage(`Property with ${propertyId} does not exist.`),
-      );
-    }
 
     /* INFO: FOR PRACTICE PURPOSES I REMOVED THIS RESTRICTION AND IMPLEMENT
      *   WS CONNECTION REGARDING ADDING A NEW PROPERTY REVIEW REPLY AS WELL. */

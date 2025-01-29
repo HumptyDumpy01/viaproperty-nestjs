@@ -10,7 +10,6 @@ import { showErrorMessage } from '../../utils/functions/showErrorMessage';
 import { v4 as uuid } from 'uuid';
 import { Repository } from 'typeorm';
 import { PropertyService } from '../property/property.service';
-import { AuthService } from '../auth/auth.service';
 import { PropertyReplyInput } from '../property-comments/inputs/property-reply.input';
 import { PropertyRepliesInterface } from '../property-comments/interfaces/property-replies.interface';
 import { JWTPayloadType } from '../auth/auth.guard';
@@ -25,12 +24,12 @@ export class PropertyQuestionsService {
     @InjectRepository(PropertyQuestions)
     private propertyQuestionsRepository: Repository<PropertyQuestions>,
     private propertyService: PropertyService,
-    private authService: AuthService,
   ) {}
 
   async getPropertyQuestionsByPropId(
     propertyId: string,
   ): Promise<PropertyQuestions[] | []> {
+    await this.propertyService.getProperty(propertyId);
     return await this.propertyQuestionsRepository.find({
       where: { propertyId },
     });
@@ -39,23 +38,9 @@ export class PropertyQuestionsService {
   async createPropertyQuestion(
     propertyQuestionInput: PropertyQuestionInput,
   ): Promise<PropertyQuestions> {
-    const { propertyId, userId } = propertyQuestionInput;
+    const { propertyId } = propertyQuestionInput;
 
-    const property = await this.propertyService.getProperty(propertyId);
-
-    if (!property) {
-      throw new NotFoundException(
-        showErrorMessage(`Property with id ${propertyId} not found`),
-      );
-    }
-
-    const user = await this.authService.getUserData(userId);
-
-    if (!user) {
-      throw new NotFoundException(
-        showErrorMessage(`User with id ${userId} not found`),
-      );
-    }
+    await this.propertyService.getProperty(propertyId);
 
     const newQuestionData = {
       ...propertyQuestionInput,
@@ -78,12 +63,6 @@ export class PropertyQuestionsService {
     const { commentId, propertyId } = propertyReplyInput;
 
     const property = await this.propertyService.getProperty(propertyId);
-
-    if (!property) {
-      throw new NotFoundException(
-        showErrorMessage(`Property with ${propertyId} does not exist.`),
-      );
-    }
 
     const userType: UserTypeEnum =
       property.landlordId === user.id

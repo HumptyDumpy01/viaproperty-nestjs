@@ -20,9 +20,14 @@ export class PropertyService {
   }
 
   async getProperty(id: string): Promise<Property> {
-    return await this.propertyRepository.findOne({
+    const property = await this.propertyRepository.findOne({
       where: { id, active: true },
     });
+    if (!property) {
+      throw new NotFoundException('Property not found.');
+    }
+
+    return property;
   }
 
   async createPropertyAdvert(propertyInput: PropertyInput): Promise<Property> {

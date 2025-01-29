@@ -22,6 +22,7 @@ import { PropertyQuestions } from './property-questions/property-questions.entit
 import { OrderModule } from './order/order.module';
 import { Order } from './order/order.entity';
 import { AuthGuard } from './auth/auth.guard';
+import { WishlistModule } from './user/wishlist/wishlist.module';
 
 dotenv.config({
   path: `${__dirname}/../../config.env`,
@@ -63,6 +64,7 @@ dotenv.config({
     PropertyCommentsModule,
     PropertyQuestionsModule,
     OrderModule,
+    WishlistModule,
   ],
   controllers: [],
   providers: [AuthGuard],
