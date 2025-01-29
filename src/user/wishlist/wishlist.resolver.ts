@@ -3,6 +3,7 @@ import { WishlistService } from './wishlist.service';
 import { Wishlist } from './entities/wishlist.entity';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../../auth/auth.guard';
+import { UserWishlisted } from './entities/user-wishlisted.entity';
 
 @Resolver(() => Wishlist)
 export class WishlistResolver {
@@ -20,14 +21,34 @@ export class WishlistResolver {
     );
   }
 
-  @Query(() => [Wishlist], { name: 'wishlist' })
+  @Query(() => [Wishlist])
   findAll() {
     return this.wishlistService.findAll();
   }
 
-  @Query(() => Wishlist, { name: 'wishlist' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.wishlistService.findOne(id);
+  @Query(() => Wishlist)
+  @UseGuards(AuthGuard)
+  isAddedPropertyToWishlist(
+    @Args('propertyId') propertyId: string,
+    @Context() context: any,
+  ) {
+    return this.wishlistService.userAddedPropertyToWishlist(
+      propertyId,
+      context.req.user.id,
+    );
+  }
+
+  @UseGuards(AuthGuard)
+  @Query(() => UserWishlisted)
+  userAddedPropertyToWishlist(
+    @Args(`propertyId`) propertyId: string,
+    @Context() context: any,
+  ) {
+    const wishlisted = this.wishlistService.userAddedPropertyToWishlist(
+      propertyId,
+      context.req.user.id,
+    );
+    return { wishlisted: wishlisted };
   }
 
   @Mutation(() => Wishlist)

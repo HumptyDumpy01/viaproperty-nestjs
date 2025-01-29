@@ -106,7 +106,7 @@ export class AuthService {
     // if not found, it returns an error
     await this.propertyService.getProperty(propertyId);
 
-    const user = await this.userRepository.findOne({ where: { id: userId } });
+    const user = await this.getUserData(userId);
     const userWishlist = user.wishlist;
 
     if (userWishlist.includes(propertyId)) {
