@@ -4,17 +4,16 @@ import { Wishlist } from './entities/wishlist.entity';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../../auth/auth.guard';
 import { UserWishlisted } from './entities/user-wishlisted.entity';
-import { PropertyService } from '../../property/property.service';
 import { ResolvedWishlist } from './entities/resolved-wishlist';
 
 @Resolver(() => Wishlist)
 @UseGuards(AuthGuard)
 export class WishlistResolver {
-  constructor(
-    private readonly wishlistService: WishlistService,
-    private propertyService: PropertyService,
-  ) {}
+  constructor(private readonly wishlistService: WishlistService) {}
 
+  /**
+   * adds property to the user wishlist.
+   */
   @Mutation(() => Wishlist)
   addPropertyIdToUserWishlist(
     @Args('propertyId') propertyId: string,
@@ -26,17 +25,10 @@ export class WishlistResolver {
     );
   }
 
-  @Query(() => Wishlist)
-  isAddedPropertyToWishlist(
-    @Args('propertyId') propertyId: string,
-    @Context() context: any,
-  ) {
-    return this.wishlistService.userAddedPropertyToWishlist(
-      propertyId,
-      context.req.user.id,
-    );
-  }
-
+  /**
+   *
+   * returns true or false based on whether user added property to wishlist or not.
+   */
   @Query(() => UserWishlisted)
   userAddedPropertyToWishlist(
     @Args(`propertyId`) propertyId: string,
@@ -49,6 +41,9 @@ export class WishlistResolver {
     return { wishlisted: wishlisted };
   }
 
+  /**
+   * simply removes property id from the user wishlist.
+   */
   @Mutation(() => Wishlist)
   removePropertyIdFromUserWishlist(
     @Args('propertyId') propertyId: string,
@@ -62,8 +57,12 @@ export class WishlistResolver {
     return { wishlist: remainingWishlist };
   }
 
+  /**
+   * fetches user wishlisted properties, where each property is represented
+   * as an entire object, not just prop id.
+   */
   @Query(() => ResolvedWishlist)
-  async getUserWishlist(@Context() context: any) {
+  async getResolvedUserWishlist(@Context() context: any) {
     const result = await this.wishlistService.getUserWishlist(
       context.req.user.id,
     );
