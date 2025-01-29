@@ -120,4 +120,23 @@ export class AuthService {
     await this.userRepository.save(user);
     return userWishlist;
   }
+
+  async removePropertyIdFromUserWishlist(propertyId: string, userId: string) {
+    // if not found, it returns an error
+    await this.propertyService.getProperty(propertyId);
+
+    const user = await this.getUserData(userId);
+    let userWishlist = user.wishlist;
+
+    if (!userWishlist.includes(propertyId)) {
+      throw new BadRequestException(
+        showErrorMessage('This property ID is not present in user wishlist.'),
+      );
+    }
+
+    userWishlist = userWishlist.filter((propId) => propId !== propertyId);
+    user.wishlist = userWishlist;
+    await this.userRepository.save(user);
+    return userWishlist;
+  }
 }

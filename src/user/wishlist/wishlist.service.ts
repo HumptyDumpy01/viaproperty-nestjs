@@ -27,7 +27,10 @@ export class WishlistService {
     return user.wishlist.includes(propertyId);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} wishlist`;
+  removePropertyIdFromUserWishlist(propertyId: string, userId: string) {
+    return this.authService.removePropertyIdFromUserWishlist(
+      propertyId,
+      userId,
+    );
   }
 }
