@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotAcceptableException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
@@ -27,6 +28,18 @@ export class AuthService {
 
   async getUserData(id: string): Promise<User> {
     return await this.userRepository.findOne({ where: { id } });
+  }
+
+  async getUserByEmail(email: string): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { email } });
+
+    if (!user) {
+      throw new NotFoundException(
+        showErrorMessage(`User  with is ${email} not found!`),
+      );
+    }
+
+    return user;
   }
 
   async createUser(

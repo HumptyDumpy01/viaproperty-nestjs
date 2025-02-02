@@ -1,7 +1,10 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
+import { IsEmail, MaxLength } from 'class-validator';
 
 @InputType()
 export class CreateChangePasswordTokenInput {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number;
+  @IsEmail()
+  @Field()
+  @MaxLength(1000)
+  email: string;
 }
