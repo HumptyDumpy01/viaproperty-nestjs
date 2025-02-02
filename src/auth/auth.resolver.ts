@@ -1,8 +1,11 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserType } from './user.type';
 import { AuthService } from './auth.service';
 import { UserInput } from './user.input';
 import { LoginResponse } from './object-types/login-response.object.type';
+import { ChangeUserInitialsObjectType } from './object-types/change-user-initials.object.type';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from './auth.guard';
 
 // Specify the type of the resolver to which it would be attached.
 @Resolver((of) => UserType)
@@ -22,6 +25,19 @@ export class AuthResolver {
   ) {
     // USE A SERVICE HERE. INJECT IT AS A DEP ONTO THIS CLASS
     return this.authService.createUser(userInput, confirmPassword);
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation((_returns) => ChangeUserInitialsObjectType)
+  async changeUserInitials(
+    @Args(`updatedInitials`) updatedInitials: string,
+    @Context() context: any,
+  ) {
+    const { initials, accessToken } = await this.authService.changeUserInitials(
+      context.req.user.id,
+      updatedInitials,
+    );
+    return { updatedInitials: initials, accessToken };
   }
 
   @Mutation((returns) => LoginResponse)

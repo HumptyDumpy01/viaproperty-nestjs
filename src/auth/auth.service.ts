@@ -145,4 +145,22 @@ export class AuthService {
 
     return user.wishlist;
   }
+
+  async changeUserInitials(userId: string, updatedInitials: string) {
+    const user = await this.getUserData(userId);
+    if (user.initials === updatedInitials) {
+      throw new BadRequestException(
+        showErrorMessage(
+          'updatedInitials are the same as current user initials.',
+        ),
+      );
+    }
+
+    user.initials = updatedInitials;
+
+    const updatedUser = await this.userRepository.save(user);
+    const { accessToken } = await this.login(updatedUser);
+
+    return { initials: updatedUser.initials, accessToken };
+  }
 }
