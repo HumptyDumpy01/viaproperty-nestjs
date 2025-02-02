@@ -9,7 +9,7 @@ import {
 
 @Entity(`changePasswordTokens`)
 @Unique([`email`])
-@Index(['createdAt'], { expireAfterSeconds: 300 }) // each document expires after 5 minutes.
+@Index(['createdAt'], { expireAfterSeconds: 600 }) // each document expires after 10 minutes.
 export class ChangePasswordTokens {
   @ObjectIdColumn()
   _id: string;

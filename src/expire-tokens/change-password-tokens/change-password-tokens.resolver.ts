@@ -1,7 +1,9 @@
-import { Args, Int, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ChangePasswordTokensService } from './change-password-tokens.service';
 import { CreateChangePasswordTokenInput } from './dto/create-change-password-token.input';
 import { ChangePasswordToken } from './object-types/change-password-token.object.type';
+import { ValidateTokenObjectType } from './object-types/validate-token.object.type';
+import { ValidateTokenInput } from './dto/validate-token.input';
 
 @Resolver(() => ChangePasswordToken)
 export class ChangePasswordTokensResolver {
@@ -19,8 +21,10 @@ export class ChangePasswordTokensResolver {
     );
   }
 
-  @Mutation(() => ChangePasswordToken)
-  removeChangePasswordToken(@Args('id', { type: () => Int }) id: number) {
-    return this.changePasswordTokensService.remove(id);
+  @Query(() => ValidateTokenObjectType)
+  validateToken(
+    @Args(`validateTokenInput`) validateTokenInput: ValidateTokenInput,
+  ) {
+    return this.changePasswordTokensService.validateToken(validateTokenInput);
   }
 }

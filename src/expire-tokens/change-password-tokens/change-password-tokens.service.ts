@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateChangePasswordTokenInput } from './dto/create-change-password-token.input';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -9,6 +13,7 @@ import { AuthService } from '../../auth/auth.service';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'node:crypto';
 import { calcTimeBeforeExpires } from '../../../utils/functions/calcTimeBeforeExpires';
+import { ValidateTokenInput } from './dto/validate-token.input';
 
 @Injectable()
 export class ChangePasswordTokensService {
@@ -42,6 +47,9 @@ export class ChangePasswordTokensService {
     const secret = authenticator.generateSecret();
     const token = authenticator.generate(secret);
 
+    console.log('Issued Token:', token);
+    console.log('For email:', email);
+
     const encryptedToken = await bcrypt.hash(token, 12);
 
     const newToken = {
@@ -64,7 +72,25 @@ export class ChangePasswordTokensService {
     });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} changePasswordToken`;
+  async validateToken(validateTokenInput: ValidateTokenInput) {
+    const { token, email } = validateTokenInput;
+
+    await this.authService.getUserByEmail(email);
+
+    const hashedEmail = crypto.createHash(`sha256`).update(email).digest(`hex`);
+    const existingToken = await this.findOneByHashedEmail(hashedEmail);
+
+    if (!existingToken) {
+      throw new NotFoundException('The token has expired or not exists.');
+    }
+    const tokenIsValid = await bcrypt.compare(
+      token.toString(),
+      existingToken.data,
+    );
+    return { tokenIsValid };
+  }
+
+  async remove(id: string) {
+    return await this.changePasswordTokensRepository.delete(id);
   }
 }
