@@ -14,12 +14,16 @@ import * as bcrypt from 'bcrypt';
 import * as crypto from 'node:crypto';
 import { calcTimeBeforeExpires } from '../../../utils/functions/calcTimeBeforeExpires';
 import { ValidateTokenInput } from './dto/validate-token.input';
+import { SendgridMailService } from '../../sendgrid-mail/sendgrid-mail.service';
+import { TOKEN_EXPIRES_AFTER_MINUTES } from '../../../utils/variables/variables';
+import { getChangePasswordTokenMailConfig } from './utils/getChangePasswordTokenMailHTML';
 
 @Injectable()
 export class ChangePasswordTokensService {
   constructor(
     @InjectRepository(ChangePasswordTokens)
     private changePasswordTokensRepository: Repository<ChangePasswordTokens>,
+    private sandGridMailService: SendgridMailService,
     private authService: AuthService,
   ) {}
 
@@ -35,8 +39,8 @@ export class ChangePasswordTokensService {
     if (existingToken && existingToken.createdAt) {
       const { minutes, seconds, dateOfIssue } = calcTimeBeforeExpires(
         existingToken.createdAt,
-        // 5 because the newly created token only lasts for 5 minutes and then expires.
-        5,
+        // 10 because the newly created token only lasts for 10 minutes and then expires.
+        TOKEN_EXPIRES_AFTER_MINUTES,
       );
 
       throw new InternalServerErrorException(
@@ -46,9 +50,6 @@ export class ChangePasswordTokensService {
 
     const secret = authenticator.generateSecret();
     const token = authenticator.generate(secret);
-
-    console.log('Issued Token:', token);
-    console.log('For email:', email);
 
     const encryptedToken = await bcrypt.hash(token, 12);
 
@@ -61,9 +62,21 @@ export class ChangePasswordTokensService {
     const generatedChangePasswordToken =
       this.changePasswordTokensRepository.create(newToken);
 
-    return await this.changePasswordTokensRepository.save(
+    const sendGridResponseSuccess = await this.sandGridMailService.sendMail(
+      getChangePasswordTokenMailConfig(token),
+    );
+
+    if (!sendGridResponseSuccess) {
+      throw new InternalServerErrorException(
+        `Failed to send an email. Please try again later.`,
+      );
+    }
+
+    const savedPasswordToken = await this.changePasswordTokensRepository.save(
       generatedChangePasswordToken,
     );
+
+    return savedPasswordToken;
   }
 
   async findOneByHashedEmail(hashedEmail: string) {
