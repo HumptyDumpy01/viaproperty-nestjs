@@ -148,11 +148,14 @@ export class AuthService {
 
   async changeUserInitials(userId: string, updatedInitials: string) {
     const user = await this.getUserData(userId);
-    if (user.initials === updatedInitials) {
+
+    if (
+      user.initials === updatedInitials ||
+      updatedInitials.trim().length < 2 ||
+      updatedInitials.trim().length > 100
+    ) {
       throw new BadRequestException(
-        showErrorMessage(
-          'updatedInitials are the same as current user initials.',
-        ),
+        showErrorMessage('Incorrect format to update user initials.'),
       );
     }
 
