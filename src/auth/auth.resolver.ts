@@ -7,6 +7,8 @@ import { ChangeUserInitialsObjectType } from './object-types/change-user-initial
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from './auth.guard';
 import { UpdateUserPasswordInput } from './inputs/update-user-password.input';
+import { AuthMethodObjectType } from './object-types/auth-method.object.type';
+import { ChangeUserAuthMethodInput } from './inputs/change-user-auth-method.input';
 
 // Specify the type of the resolver to which it would be attached.
 @Resolver((of) => UserType)
@@ -16,6 +18,15 @@ export class AuthResolver {
   @Query((returns) => UserType)
   getUserData(@Args('id') id: string) {
     return this.authService.getUserData(id);
+  }
+
+  @UseGuards(AuthGuard)
+  @Query((_returns) => AuthMethodObjectType)
+  getUserAuthMethod(@Context() context: any) {
+    const userAuthMethod = this.authService.getUserAuthMethod(
+      context.req.user.email,
+    );
+    return { authMethod: userAuthMethod };
   }
 
   // example of usage (mutation)
@@ -61,6 +72,19 @@ export class AuthResolver {
 
     const { accessToken } = await this.authService.login(user);
     return { accessToken };
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation((_returns) => AuthMethodObjectType)
+  changeUserAuthMethod(
+    @Context() context: any,
+    @Args(`changeUserAuthMethodInput`)
+    changeUserAuthMethodInput: ChangeUserAuthMethodInput,
+  ) {
+    return this.authService.changeUserAuthMethod(
+      changeUserAuthMethodInput,
+      context.req.user.email,
+    );
   }
 
   // INFO: POST-HOOKS IN GRAPH-QL

@@ -21,6 +21,7 @@ import { UpdateUserPasswordInput } from './inputs/update-user-password.input';
 import { ChangePasswordTokensService } from '../expire-tokens/change-password-tokens/change-password-tokens.service';
 import { SendgridMailService } from '../sendgrid-mail/sendgrid-mail.service';
 import { sendGridSuccessfulPasswordResetConfig } from './utils/sendGridSuccessfulPasswordResetConfig';
+import { ChangeUserAuthMethodInput } from './inputs/change-user-auth-method.input';
 
 @Injectable()
 export class AuthService {
@@ -70,7 +71,7 @@ export class AuthService {
       status: UserStatusEnum.USER,
       authMethod: AuthMethodEnum.PASSWORD,
       createdAt: new Date().toISOString(),
-      online: false,
+      online: true,
       adverts: [],
       wishlist: [],
       purchases: [],
@@ -231,5 +232,40 @@ export class AuthService {
         'The token has expired or corrupted.',
       );
     }
+  }
+
+  async getUserAuthMethod(email: string) {
+    const user = await this.getUserByEmail(email);
+
+    return user.authMethod;
+  }
+
+  async changeUserAuthMethod(
+    changeUserAuthMethodInput: ChangeUserAuthMethodInput,
+    email: string,
+  ) {
+    const { authMethod } = changeUserAuthMethodInput;
+
+    const user = await this.getUserByEmail(email);
+
+    if (authMethod === AuthMethodEnum.GOOGLE_PROVIDER) {
+      throw new NotAcceptableException(
+        showErrorMessage(
+          'User cannot switch to google provider auth method manually.',
+        ),
+      );
+    }
+
+    if (user.authMethod === authMethod) {
+      throw new NotAcceptableException(
+        showErrorMessage(
+          'Failed to change auth method because user already have the same method defined.',
+        ),
+      );
+    }
+    user.authMethod = authMethod as AuthMethodEnum;
+
+    const savedNewData = await this.userRepository.save(user);
+    return { authMethod: savedNewData.authMethod };
   }
 }

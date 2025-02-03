@@ -1,5 +1,6 @@
 export enum AuthMethodEnum {
   PASSWORD = 'password',
-  TWO_FACTOR_AUTH = 'two-factor-auth',
+  TWO_FACTOR_AUTH = '2FA',
   CODE = 'code',
+  GOOGLE_PROVIDER = `google-provider`,
 }
