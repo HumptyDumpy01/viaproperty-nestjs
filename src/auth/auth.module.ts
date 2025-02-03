@@ -9,6 +9,8 @@ import * as process from 'node:process';
 import { JwtStrategy } from './jwt.strategy';
 import { configDotenv } from 'dotenv';
 import { PropertyModule } from '../property/property.module';
+import { ChangePasswordTokensModule } from '../expire-tokens/change-password-tokens/change-password-tokens.module';
+import { SendgridMailModule } from '../sendgrid-mail/sendgrid-mail.module';
 
 configDotenv({
   path: `${__dirname}/../../../config.env`,
@@ -19,7 +21,9 @@ configDotenv({
   imports: [
     TypeOrmModule.forFeature([User]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
+    SendgridMailModule,
     forwardRef(() => PropertyModule),
+    forwardRef(() => ChangePasswordTokensModule),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },

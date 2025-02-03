@@ -3,6 +3,7 @@ import {
   Injectable,
   NotAcceptableException,
   NotFoundException,
+  PreconditionFailedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
@@ -16,6 +17,10 @@ import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { JwtService } from '@nestjs/jwt';
 import { showErrorMessage } from '../../utils/functions/showErrorMessage';
 import { PropertyService } from '../property/property.service';
+import { UpdateUserPasswordInput } from './inputs/update-user-password.input';
+import { ChangePasswordTokensService } from '../expire-tokens/change-password-tokens/change-password-tokens.service';
+import { SendgridMailService } from '../sendgrid-mail/sendgrid-mail.service';
+import { sendGridSuccessfulPasswordResetConfig } from './utils/sendGridSuccessfulPasswordResetConfig';
 
 @Injectable()
 export class AuthService {
@@ -24,6 +29,8 @@ export class AuthService {
     private userRepository: Repository<User>,
     private jwtService: JwtService,
     private propertyService: PropertyService,
+    private changePasswordTokensService: ChangePasswordTokensService,
+    private sendGridMailService: SendgridMailService,
   ) {}
 
   async getUserData(id: string): Promise<User> {
@@ -178,5 +185,51 @@ export class AuthService {
     const { accessToken } = await this.login(updatedUser);
 
     return { initials: updatedUser.initials, accessToken };
+  }
+
+  /**
+   * to update the password, user should confirm him identity via
+   * entering the token sent to his email inbox, and then once more to
+   * confirm his new password, the token is checked on expiration date
+   * and validity.
+   */
+  async updateUserPassword(updateUserPasswordInput: UpdateUserPasswordInput) {
+    const { userEmail, password, confirmPassword, token } =
+      updateUserPasswordInput;
+
+    // the token is validated once more, ensuring that the user
+    // is the one he claims to be.
+    const {
+      tokenIsValid,
+      userEmail: validEmail,
+      id: tokenId,
+    } = await this.changePasswordTokensService.validateToken({
+      email: userEmail,
+      token,
+    });
+
+    if (tokenIsValid) {
+      const user = await this.getUserByEmail(validEmail);
+
+      if (password !== confirmPassword) {
+        throw new BadRequestException('Passwords do not match.');
+      }
+      const encryptedNewPassword = await bcrypt.hash(password, 12);
+
+      user.password = encryptedNewPassword;
+
+      await this.changePasswordTokensService.deleteToken(tokenId);
+
+      // sending a message about the activity.
+      await this.sendGridMailService.sendMail(
+        sendGridSuccessfulPasswordResetConfig(),
+      );
+
+      return await this.userRepository.save(user);
+    } else {
+      throw new PreconditionFailedException(
+        'The token has expired or corrupted.',
+      );
+    }
   }
 }

@@ -1,4 +1,6 @@
 import {
+  forwardRef,
+  Inject,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -24,7 +26,7 @@ export class ChangePasswordTokensService {
     @InjectRepository(ChangePasswordTokens)
     private changePasswordTokensRepository: Repository<ChangePasswordTokens>,
     private sandGridMailService: SendgridMailService,
-    private authService: AuthService,
+    @Inject(forwardRef(() => AuthService)) private authService: AuthService,
   ) {}
 
   async create(createChangePasswordTokenInput: CreateChangePasswordTokenInput) {
@@ -100,10 +102,10 @@ export class ChangePasswordTokensService {
       token.toString(),
       existingToken.data,
     );
-    return { tokenIsValid };
+    return { tokenIsValid, userEmail: email, id: existingToken.id };
   }
 
-  async remove(id: string) {
-    return await this.changePasswordTokensRepository.delete(id);
+  async deleteToken(id: string) {
+    return await this.changePasswordTokensRepository.delete({ id });
   }
 }

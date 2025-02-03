@@ -6,6 +6,7 @@ import { LoginResponse } from './object-types/login-response.object.type';
 import { ChangeUserInitialsObjectType } from './object-types/change-user-initials.object.type';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from './auth.guard';
+import { UpdateUserPasswordInput } from './inputs/update-user-password.input';
 
 // Specify the type of the resolver to which it would be attached.
 @Resolver((of) => UserType)
@@ -38,6 +39,14 @@ export class AuthResolver {
       updatedInitials,
     );
     return { updatedInitials: initials, accessToken };
+  }
+
+  @Mutation((_returns) => UserType)
+  async updateUserPassword(
+    @Args(`updateUserPasswordInput`)
+    updateUserPasswordInput: UpdateUserPasswordInput,
+  ) {
+    return await this.authService.updateUserPassword(updateUserPasswordInput);
   }
 
   @Mutation((returns) => LoginResponse)

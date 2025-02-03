@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ChangePasswordTokensService } from './change-password-tokens.service';
 import { ChangePasswordTokensResolver } from './change-password-tokens.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -10,8 +10,9 @@ import { SendgridMailModule } from '../../sendgrid-mail/sendgrid-mail.module';
   providers: [ChangePasswordTokensResolver, ChangePasswordTokensService],
   imports: [
     TypeOrmModule.forFeature([ChangePasswordTokens]),
-    AuthModule,
+    forwardRef(() => AuthModule),
     SendgridMailModule,
   ],
+  exports: [ChangePasswordTokensService],
 })
 export class ChangePasswordTokensModule {}
