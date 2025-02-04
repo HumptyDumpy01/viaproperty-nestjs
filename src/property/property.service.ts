@@ -7,6 +7,7 @@ import { PropertyFilterInput } from './inputs/propertyFilterInput';
 import { filterProperties } from '../../utils/functions/filterProperties';
 import { UpdatePropertyRatingInput } from './inputs/update-property-rating.input';
 import { showErrorMessage } from '../../utils/functions/showErrorMessage';
+import { GetPropertiesByIdsInput } from './inputs/get-properties-by-ids.input';
 
 @Injectable()
 export class PropertyService {
@@ -88,13 +89,18 @@ export class PropertyService {
     return await this.propertyRepository.save(property);
   }
 
-  async getPropertiesByIds(propertyIds: string[]): Promise<Property[]> {
+  async getPropertiesByIds(
+    getPropertiesByIdsInput: GetPropertiesByIdsInput,
+  ): Promise<Property[]> {
+    const { skip, take, propIds } = getPropertiesByIdsInput;
     // Fetch properties by UUIDs
     const properties = await this.propertyRepository.find({
       // I did use "ts-ignore" for one reason: IDE does not like the way
       // I use $in, though es-lint auto formats these lines like that.
       // @ts-ignore
-      where: { id: { $in: propertyIds } },
+      where: { id: { $in: propIds } },
+      take,
+      skip,
     });
     return properties;
   }
