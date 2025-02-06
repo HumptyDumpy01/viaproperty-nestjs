@@ -92,15 +92,13 @@ export class PropertyService {
   async getPropertiesByIds(
     getPropertiesByIdsInput: GetPropertiesByIdsInput,
   ): Promise<Property[]> {
-    const { skip, take, propIds } = getPropertiesByIdsInput;
+    const { propIds } = getPropertiesByIdsInput;
     // Fetch properties by UUIDs
     const properties = await this.propertyRepository.find({
       // I did use "ts-ignore" for one reason: IDE does not like the way
       // I use $in, though es-lint auto formats these lines like that.
       // @ts-ignore
       where: { id: { $in: propIds } },
-      take,
-      skip,
     });
     return properties;
   }

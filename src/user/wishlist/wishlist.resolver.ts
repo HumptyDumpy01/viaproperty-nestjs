@@ -5,7 +5,6 @@ import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../../auth/auth.guard';
 import { UserWishlisted } from './entities/user-wishlisted.entity';
 import { ResolvedWishlist } from './entities/resolved-wishlist';
-import { GetResolvedUserWishlistInput } from './dto/get-resolved-user-wishlist.input';
 
 @Resolver(() => Wishlist)
 @UseGuards(AuthGuard)
@@ -63,18 +62,10 @@ export class WishlistResolver {
    * as an entire object, not just prop id.
    */
   @Query(() => ResolvedWishlist)
-  async getResolvedUserWishlist(
-    @Context() context: any,
-    @Args(`getResolvedUserWishlistInput`)
-    getResolvedUserWishlistInput: GetResolvedUserWishlistInput,
-  ) {
-    const { take, skip } = getResolvedUserWishlistInput;
-
-    const { result, total } = await this.wishlistService.getUserWishlist(
+  async getResolvedUserWishlist(@Context() context: any) {
+    const { result } = await this.wishlistService.getUserWishlist(
       context.req.user.id,
-      take,
-      skip,
     );
-    return { resolvedWishlist: result, total };
+    return { resolvedWishlist: result };
   }
 }

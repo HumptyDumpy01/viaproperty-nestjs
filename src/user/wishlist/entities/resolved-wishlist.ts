@@ -5,7 +5,4 @@ import { PropertyType } from '../../../property/property.type';
 export class ResolvedWishlist {
   @Field(() => [PropertyType], { nullable: true })
   resolvedWishlist: PropertyType[];
-
-  @Field()
-  total: number;
 }

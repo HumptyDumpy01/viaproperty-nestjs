@@ -17,16 +17,15 @@ export class WishlistService {
     return { wishlist: userWishlist };
   }
 
-  async getUserWishlist(userId: string, take: number, skip: number) {
+  async getUserWishlist(userId: string) {
     const propIds = await this.authService.getUserWishlist(userId);
     const getPropertyByIdsInput = {
       propIds,
-      take,
-      skip,
     };
     const result = await this.propertyService.getPropertiesByIds(
       getPropertyByIdsInput,
     );
+
     return { result, total: propIds.length };
   }
 
