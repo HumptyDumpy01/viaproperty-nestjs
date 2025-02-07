@@ -30,13 +30,11 @@ export class PropertyResolver {
   ) {}
 
   @Query(() => [PropertyType])
-  @UseGuards(AuthGuard)
   properties(@Args('filter', { nullable: true }) filter?: PropertyFilterInput) {
     return this.propertyService.getProperties(filter);
   }
 
   @Query((_returns) => PropertyType)
-  @UseGuards(AuthGuard)
   property(@Args('id') id: string) {
     return this.propertyService.getProperty(id);
   }
@@ -55,13 +53,11 @@ export class PropertyResolver {
   }
 
   @ResolveField(() => [PropertyCommentsType])
-  @UseGuards(AuthGuard)
   async reviews(@Parent() property: PropertyType) {
     return this.propertyCommentsService.propertyComments(property.id);
   }
 
   @ResolveField(() => [PropertyQuestionsType])
-  @UseGuards(AuthGuard)
   async questions(@Parent() property: PropertyType) {
     return this.propertyQuestionsService.getPropertyQuestionsByPropId(
       property.id,
