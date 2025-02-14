@@ -1,10 +1,10 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   NotAcceptableException,
   NotFoundException,
   PreconditionFailedException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
@@ -23,6 +23,7 @@ import { ChangePasswordTokensService } from '../expire-tokens/change-password-to
 import { SendgridMailService } from '../sendgrid-mail/sendgrid-mail.service';
 import { sendGridSuccessfulPasswordResetConfig } from './utils/sendGridSuccessfulPasswordResetConfig';
 import { ChangeUserAuthMethodInput } from './inputs/change-user-auth-method.input';
+import { RegistrationTokensService } from '../expire-tokens/registration-tokens/registration-tokens.service';
 
 @Injectable()
 export class AuthService {
@@ -33,6 +34,7 @@ export class AuthService {
     private propertyService: PropertyService,
     private changePasswordTokensService: ChangePasswordTokensService,
     private sendGridMailService: SendgridMailService,
+    private registrationTokensService: RegistrationTokensService,
   ) {}
 
   async getUserData(id: string): Promise<User> {
@@ -51,18 +53,28 @@ export class AuthService {
     return user;
   }
 
-  async createUser(userInput: UserInput): Promise<User> {
-    const { email, initials, password, confirmPassword, authMethod } =
-      userInput;
+  async createUser(userInput: UserInput): Promise<{ accessToken: string }> {
+    const {
+      email,
+      initials,
+      password,
+      confirmPassword,
+      authMethod,
+      verificationToken,
+    } = userInput;
+
+    const validate =
+      await this.registrationTokensService.validateRegistrationToken({
+        token: verificationToken,
+        email,
+      });
+
+    if (!validate) {
+      throw new InternalServerErrorException(`Validation token has expired.`);
+    }
 
     if (password !== confirmPassword) {
       throw new NotAcceptableException(`Passwords do not match`);
-    }
-
-    const user = await this.userRepository.findOne({ where: { email } });
-
-    if (user) {
-      throw new UnauthorizedException(`The email is already in use.`);
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -91,8 +103,11 @@ export class AuthService {
     };
 
     const newUser = this.userRepository.create(userData);
-    await this.userRepository.save(newUser);
-    return newUser;
+    const savedUser = await this.userRepository.save(newUser);
+
+    const { accessToken } = await this.login(savedUser);
+
+    return { accessToken };
   }
 
   async validateUser(payload: JwtPayload): Promise<User> {

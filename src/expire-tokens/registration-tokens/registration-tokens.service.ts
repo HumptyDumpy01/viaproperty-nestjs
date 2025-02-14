@@ -1,4 +1,9 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { CreateRegistrationTokenInput } from './dto/create-registration-token.input';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RegistrationTokens } from './registration-tokens.entity';
@@ -10,13 +15,14 @@ import * as crypto from 'node:crypto';
 import { authenticator } from 'otplib';
 import { calcTimeBeforeExpires } from '../../../utils/functions/calcTimeBeforeExpires';
 import { v4 as uuid } from 'uuid';
+import { ValidateRegistrationTokenInput } from './dto/validate-registration-token.input';
 
 @Injectable()
 export class RegistrationTokensService {
   constructor(
     @InjectRepository(RegistrationTokens)
     private registerTokensRepository: Repository<RegistrationTokens>,
-    private authService: AuthService,
+    @Inject(forwardRef(() => AuthService)) private authService: AuthService,
   ) {}
 
   async create(createRegistrationTokenInput: CreateRegistrationTokenInput) {
@@ -71,11 +77,36 @@ export class RegistrationTokensService {
     });
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} registrationToken`;
+  async validateRegistrationToken(
+    validateRegistrationTokenInput: ValidateRegistrationTokenInput,
+  ) {
+    const { token, email } = validateRegistrationTokenInput;
+
+    const hashedEmail = crypto.createHash(`sha256`).update(email).digest(`hex`);
+    const registrationToken = await this.findOneByHashedEmail(hashedEmail);
+
+    if (!registrationToken) {
+      throw new InternalServerErrorException(
+        'The token is incorrect or expired.',
+      );
+    }
+
+    const successfulTokenComparison = await bcrypt.compare(
+      token,
+      registrationToken.data,
+    );
+
+    if (!successfulTokenComparison) {
+      throw new InternalServerErrorException(
+        'The token is incorrect or expired.',
+      );
+    }
+    await this.deleteRegistrationToken(registrationToken.id);
+
+    return successfulTokenComparison;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} registrationToken`;
+  deleteRegistrationToken(id: string) {
+    return this.registerTokensRepository.delete({ id });
   }
 }

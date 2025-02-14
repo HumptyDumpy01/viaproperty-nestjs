@@ -2,6 +2,7 @@ import { Field, InputType } from '@nestjs/graphql';
 import {
   IsEmail,
   IsEnum,
+  Length,
   Matches,
   MaxLength,
   MinLength,
@@ -38,4 +39,8 @@ export class UserInput {
   @Field(() => String)
   @IsEnum(AuthMethodEnum)
   authMethod: AuthMethodEnum;
+
+  @Length(6, 6)
+  @Field()
+  verificationToken: string;
 }

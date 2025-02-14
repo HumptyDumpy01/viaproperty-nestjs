@@ -11,6 +11,7 @@ import { configDotenv } from 'dotenv';
 import { PropertyModule } from '../property/property.module';
 import { ChangePasswordTokensModule } from '../expire-tokens/change-password-tokens/change-password-tokens.module';
 import { SendgridMailModule } from '../sendgrid-mail/sendgrid-mail.module';
+import { RegistrationTokensModule } from '../expire-tokens/registration-tokens/registration-tokens.module';
 
 configDotenv({
   path: `${__dirname}/../../../config.env`,
@@ -24,6 +25,7 @@ configDotenv({
     SendgridMailModule,
     forwardRef(() => PropertyModule),
     forwardRef(() => ChangePasswordTokensModule),
+    forwardRef(() => RegistrationTokensModule),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },

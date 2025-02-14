@@ -8,6 +8,7 @@ import { AuthGuard } from './auth.guard';
 import { UpdateUserPasswordInput } from './inputs/update-user-password.input';
 import { AuthMethodObjectType } from './object-types/auth-method.object.type';
 import { ChangeUserAuthMethodInput } from './inputs/change-user-auth-method.input';
+import { UserInput } from './user.input';
 
 // Specify the type of the resolver to which it would be attached.
 @Resolver((of) => UserType)
@@ -74,6 +75,11 @@ export class AuthResolver {
       changeUserAuthMethodInput,
       context.req.user.email,
     );
+  }
+
+  @Mutation((_returns) => LoginResponse)
+  async createUser(@Args(`userInput`) userInput: UserInput) {
+    return await this.authService.createUser(userInput);
   }
 
   // INFO: POST-HOOKS IN GRAPH-QL
