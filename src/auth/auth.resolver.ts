@@ -1,7 +1,6 @@
 import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserType } from './user.type';
 import { AuthService } from './auth.service';
-import { UserInput } from './user.input';
 import { LoginResponse } from './object-types/login-response.object.type';
 import { ChangeUserInitialsObjectType } from './object-types/change-user-initials.object.type';
 import { UseGuards } from '@nestjs/common';
@@ -27,16 +26,6 @@ export class AuthResolver {
       context.req.user.email,
     );
     return { authMethod: userAuthMethod };
-  }
-
-  // example of usage (mutation)
-  @Mutation((returns) => UserType)
-  createUser(
-    @Args(`createUserInput`) userInput: UserInput,
-    @Args(`confirmPassword`) confirmPassword: string,
-  ) {
-    // USE A SERVICE HERE. INJECT IT AS A DEP ONTO THIS CLASS
-    return this.authService.createUser(userInput, confirmPassword);
   }
 
   @UseGuards(AuthGuard)

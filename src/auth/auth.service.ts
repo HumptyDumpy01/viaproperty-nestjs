@@ -4,6 +4,7 @@ import {
   NotAcceptableException,
   NotFoundException,
   PreconditionFailedException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
@@ -50,14 +51,18 @@ export class AuthService {
     return user;
   }
 
-  async createUser(
-    userInput: UserInput,
-    confirmPassword: string,
-  ): Promise<User> {
-    const { email, initials, password } = userInput;
+  async createUser(userInput: UserInput): Promise<User> {
+    const { email, initials, password, confirmPassword, authMethod } =
+      userInput;
 
     if (password !== confirmPassword) {
       throw new NotAcceptableException(`Passwords do not match`);
+    }
+
+    const user = await this.userRepository.findOne({ where: { email } });
+
+    if (user) {
+      throw new UnauthorizedException(`The email is already in use.`);
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -69,7 +74,7 @@ export class AuthService {
       password: hashedPassword,
       bio: '',
       status: UserStatusEnum.USER,
-      authMethod: AuthMethodEnum.PASSWORD,
+      authMethod,
       createdAt: new Date().toISOString(),
       online: true,
       adverts: [],
