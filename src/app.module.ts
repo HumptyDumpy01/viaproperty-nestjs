@@ -26,6 +26,8 @@ import { WishlistModule } from './user/wishlist/wishlist.module';
 import { SendgridMailModule } from './sendgrid-mail/sendgrid-mail.module';
 import { ChangePasswordTokensModule } from './expire-tokens/change-password-tokens/change-password-tokens.module';
 import { ChangePasswordTokens } from './expire-tokens/change-password-tokens/change-password-tokens.entity';
+import { RegistrationTokensModule } from './expire-tokens/registration-tokens/registration-tokens.module';
+import { RegistrationTokens } from './expire-tokens/registration-tokens/registration-tokens.entity';
 
 dotenv.config({
   path: `${__dirname}/../../config.env`,
@@ -49,6 +51,7 @@ dotenv.config({
         PropertyQuestions,
         Order,
         ChangePasswordTokens,
+        RegistrationTokens,
       ],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -71,6 +74,7 @@ dotenv.config({
     WishlistModule,
     SendgridMailModule,
     ChangePasswordTokensModule,
+    RegistrationTokensModule,
   ],
   controllers: [],
   providers: [AuthGuard],
