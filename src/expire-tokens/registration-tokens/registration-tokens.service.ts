@@ -62,7 +62,7 @@ export class RegistrationTokensService {
     const savedRegistrationToken =
       await this.registerTokensRepository.save(createdToken);
 
-    return { sent: true };
+    return { sent: !!savedRegistrationToken._id };
   }
 
   async findOneByHashedEmail(hashedEmail: string) {
