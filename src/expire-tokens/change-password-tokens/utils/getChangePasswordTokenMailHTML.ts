@@ -1,9 +1,12 @@
 import { SendMailType } from '../../../sendgrid-mail/sendgrid-mail.service';
 import { sendGridHtml } from '../../../../utils/functions/send-grid-html';
 
-export function getChangePasswordTokenMailConfig(token: string) {
+export function getChangePasswordTokenMailConfig(
+  token: string,
+  email = `tuznikolas@gmail.com`,
+) {
   const mailConfig: SendMailType = {
-    to: 'tuznikolas@gmail.com',
+    to: email,
     subject: `Viaproperty: Request to change your Viaproperty password`,
     text: `If you did not send this request, you can just ignore the message.`,
     html: sendGridHtml(

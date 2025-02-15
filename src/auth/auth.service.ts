@@ -24,6 +24,7 @@ import { SendgridMailService } from '../sendgrid-mail/sendgrid-mail.service';
 import { sendGridSuccessfulPasswordResetConfig } from './utils/sendGridSuccessfulPasswordResetConfig';
 import { ChangeUserAuthMethodInput } from './inputs/change-user-auth-method.input';
 import { RegistrationTokensService } from '../expire-tokens/registration-tokens/registration-tokens.service';
+import { sendGridSuccessfulRegistrationConfig } from './utils/sendGridSuccessfulRegistrationConfig';
 
 @Injectable()
 export class AuthService {
@@ -104,6 +105,10 @@ export class AuthService {
 
     const newUser = this.userRepository.create(userData);
     const savedUser = await this.userRepository.save(newUser);
+
+    await this.sendGridMailService.sendMail(
+      sendGridSuccessfulRegistrationConfig(email),
+    );
 
     const { accessToken } = await this.login(savedUser);
 
