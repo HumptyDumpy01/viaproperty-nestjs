@@ -13,7 +13,8 @@ export function sendGridSuccessfulRegistrationConfig(
       '',
       `
         <h2 style="font-size: 20px; margin-bottom: 10px">Thanks a lot for participation!</h2>
-        <p style="font-size: 13px">Feel free to test the app in depth! Create a new property advert, like them, visit the account settings, try to register multiple accounts, then open multiple clients and reply on property reviews to see web sockets at work, etc!</p>
+        <p style="font-size: 13px">Feel free to test the app in depth! Create a new property advert, like them, add to the wishlist, visit the account settings, try to register multiple accounts, then open multiple clients and reply on property reviews to see web sockets at work! You
+         can try to change your advert description, change your user data and a lot more!</p>
         `,
     ),
   };
