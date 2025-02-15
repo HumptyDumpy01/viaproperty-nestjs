@@ -16,6 +16,8 @@ import { authenticator } from 'otplib';
 import { calcTimeBeforeExpires } from '../../../utils/functions/calcTimeBeforeExpires';
 import { v4 as uuid } from 'uuid';
 import { ValidateRegistrationTokenInput } from './dto/validate-registration-token.input';
+import { SendgridMailService } from '../../sendgrid-mail/sendgrid-mail.service';
+import { confirmRegistrationHTML } from './utils/confirmEmailHTML';
 
 @Injectable()
 export class RegistrationTokensService {
@@ -23,6 +25,7 @@ export class RegistrationTokensService {
     @InjectRepository(RegistrationTokens)
     private registerTokensRepository: Repository<RegistrationTokens>,
     @Inject(forwardRef(() => AuthService)) private authService: AuthService,
+    private sendGridMailService: SendgridMailService,
   ) {}
 
   async create(createRegistrationTokenInput: CreateRegistrationTokenInput) {
@@ -67,6 +70,17 @@ export class RegistrationTokensService {
 
     const savedRegistrationToken =
       await this.registerTokensRepository.save(createdToken);
+
+    const response = await this.sendGridMailService.sendMail(
+      confirmRegistrationHTML(token, email),
+    );
+
+    if (!response) {
+      await this.deleteRegistrationToken(savedRegistrationToken.id);
+      throw new InternalServerErrorException(
+        'Failed to send an email. Please try again later..',
+      );
+    }
 
     return { sent: !!savedRegistrationToken._id };
   }
