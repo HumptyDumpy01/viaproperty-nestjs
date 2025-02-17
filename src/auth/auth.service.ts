@@ -25,6 +25,7 @@ import { sendGridSuccessfulPasswordResetConfig } from './utils/sendGridSuccessfu
 import { ChangeUserAuthMethodInput } from './inputs/change-user-auth-method.input';
 import { RegistrationTokensService } from '../expire-tokens/registration-tokens/registration-tokens.service';
 import { sendGridSuccessfulRegistrationConfig } from './utils/sendGridSuccessfulRegistrationConfig';
+import { UserAuthType } from './google-auth.controller';
 
 @Injectable()
 export class AuthService {
@@ -146,6 +147,13 @@ export class AuthService {
     };
     const accessToken = this.jwtService.sign(payload);
     return { accessToken };
+  }
+
+  async loginViaGoogle(user: UserAuthType) {
+    /* TODO: IF user does not exist, create him. */
+    /* TODO: FIND THE USER BY EMAIL, AND ISSUE JWT TOKEN TO FRONT-END */
+    const { email, firstName, lastName } = user;
+    console.log(email, firstName, lastName);
   }
 
   async addPropertyIdToUserWishlist(propertyId: string, userId: string) {

@@ -12,13 +12,15 @@ import { PropertyModule } from '../property/property.module';
 import { ChangePasswordTokensModule } from '../expire-tokens/change-password-tokens/change-password-tokens.module';
 import { SendgridMailModule } from '../sendgrid-mail/sendgrid-mail.module';
 import { RegistrationTokensModule } from '../expire-tokens/registration-tokens/registration-tokens.module';
+import { GoogleStrategy } from './google.strategy';
+import { GoogleAuthController } from './google-auth.controller';
 
 configDotenv({
   path: `${__dirname}/../../../config.env`,
 });
 
 @Module({
-  providers: [AuthService, AuthResolver, JwtStrategy],
+  providers: [AuthService, AuthResolver, JwtStrategy, GoogleStrategy],
   imports: [
     TypeOrmModule.forFeature([User]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
@@ -32,5 +34,6 @@ configDotenv({
     }),
   ],
   exports: [AuthService, JwtStrategy, PassportModule],
+  controllers: [GoogleAuthController],
 })
 export class AuthModule {}
