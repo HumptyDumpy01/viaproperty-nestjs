@@ -2,6 +2,7 @@ import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
+import { FRONTEND_URL } from '../../utils/variables/variables';
 
 export type UserAuthType = {
   email: string;
@@ -22,7 +23,18 @@ export class GoogleAuthController {
   @Get(`callback`)
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
-    await this.authService.loginViaGoogle(req.user as UserAuthType);
-    res.redirect(`http://localhost:3000?accessToken=${1234}`);
+    const { accessToken, error } = await this.authService.loginViaGoogle(
+      req.user as UserAuthType,
+    );
+    if (error) {
+      res.redirect(`${FRONTEND_URL}/auth/login?error=${error}`);
+    }
+
+    // Set the access_token cookie in the same format as the front-end
+    res.setHeader(
+      'Set-Cookie',
+      `access_token=${accessToken}; Path=/; Max-Age=${1000 * 60 * 60 * 24 * 7};`,
+    );
+    res.redirect(FRONTEND_URL);
   }
 }

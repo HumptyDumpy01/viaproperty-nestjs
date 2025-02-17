@@ -19,7 +19,7 @@ export class User {
   initials: string;
 
   @Column()
-  password: string;
+  password: string | null;
 
   @Column()
   bio: string;

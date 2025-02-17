@@ -32,6 +32,7 @@ export class AuthGuard implements CanActivate {
     }
 
     const token = authHeader.split(' ')[1];
+    console.log('token:', token);
 
     if (!token) {
       throw new UnauthorizedException('Token not found');
@@ -52,7 +53,7 @@ export class AuthGuard implements CanActivate {
 
       return true;
     } catch (err) {
-      throw new UnauthorizedException('Invalid token');
+      throw new UnauthorizedException(`Invalid token: (${err})`);
     }
   }
 }

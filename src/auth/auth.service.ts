@@ -150,10 +150,50 @@ export class AuthService {
   }
 
   async loginViaGoogle(user: UserAuthType) {
-    /* TODO: IF user does not exist, create him. */
-    /* TODO: FIND THE USER BY EMAIL, AND ISSUE JWT TOKEN TO FRONT-END */
     const { email, firstName, lastName } = user;
-    console.log(email, firstName, lastName);
+    const userData = await this.getUserByEmail(email, false);
+
+    if (!userData) {
+      const userData = {
+        id: uuid(),
+        email,
+        initials: `${firstName} ${lastName}`,
+        password: null,
+        bio: '',
+        status: UserStatusEnum.USER,
+        authMethod: AuthMethodEnum.GOOGLE_PROVIDER,
+        createdAt: new Date().toISOString(),
+        online: true,
+        adverts: [],
+        wishlist: [],
+        purchases: [],
+        active: true,
+        balance: { total: 0 },
+        pendingRequests: [],
+        rejectedRequests: [],
+        completedDeals: [],
+        favoriteChats: [],
+        blockedUsers: [],
+        activity: [],
+      };
+
+      const newUser = this.userRepository.create(userData);
+      const savedUser = await this.userRepository.save(newUser);
+
+      await this.sendGridMailService.sendMail(
+        sendGridSuccessfulRegistrationConfig(email),
+      );
+
+      const { accessToken } = await this.login(savedUser);
+
+      return { accessToken, error: false };
+    }
+    if (userData && userData.authMethod !== `google-provider`) {
+      return { error: `Email is already in use.` };
+    }
+
+    const accessToken = await this.login(userData);
+    return { accessToken: accessToken.accessToken, error: false };
   }
 
   async addPropertyIdToUserWishlist(propertyId: string, userId: string) {
