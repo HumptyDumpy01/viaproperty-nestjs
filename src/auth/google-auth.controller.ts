@@ -32,17 +32,17 @@ export class GoogleAuthController {
     }
 
     // Set the access_token cookie in the same format as the front-end
-    res.setHeader(
+    /*res.setHeader(
       'Set-Cookie',
       `access_token=${accessToken}; Path=/; Max-Age=${1000 * 60 * 60 * 24 * 7};`,
-    );
+    );*/
 
-    /*res.cookie('access_token', accessToken, {
+    res.cookie('access_token', accessToken, {
       path: '/',
       maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-    });*/
+    });
     res.redirect('https://feat-google-sign-in--viaproperty-dev.netlify.app');
   }
 }
