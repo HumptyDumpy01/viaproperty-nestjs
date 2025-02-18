@@ -8,12 +8,15 @@ import { filterProperties } from '../../utils/functions/filterProperties';
 import { UpdatePropertyRatingInput } from './inputs/update-property-rating.input';
 import { showErrorMessage } from '../../utils/functions/showErrorMessage';
 import { GetPropertiesByIdsInput } from './inputs/get-properties-by-ids.input';
+import { AuthService } from '../auth/auth.service';
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class PropertyService {
   constructor(
     @InjectRepository(Property)
     private propertyRepository: Repository<Property>,
+    private authService: AuthService,
   ) {}
 
   async getProperties(filter?: PropertyFilterInput): Promise<Property[] | []> {
@@ -31,8 +34,32 @@ export class PropertyService {
     return property;
   }
 
-  async createPropertyAdvert(propertyInput: PropertyInput): Promise<Property> {
-    const newProperty = this.propertyRepository.create(propertyInput);
+  async createPropertyAdvert(
+    propertyInput: PropertyInput,
+    userEmail: string,
+  ): Promise<Property> {
+    const userData = await this.authService.getUserByEmail(userEmail);
+
+    // const userData = await this.authService.getUserByEmail(userEmail);
+    const newPropertyData = {
+      ...propertyInput,
+      id: uuid(),
+      landlordId: userData.id,
+      rating: {
+        count: 0,
+        overall: 0,
+        location: [],
+        condition: [],
+        ownership: [],
+        amenities: [],
+        noiseLevel: [],
+        security: [],
+      },
+      createdAt: new Date().toISOString(),
+      active: false,
+    };
+
+    const newProperty = this.propertyRepository.create(newPropertyData);
     return await this.propertyRepository.save(newProperty);
   }
 

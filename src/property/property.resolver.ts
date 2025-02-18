@@ -1,5 +1,6 @@
 import {
   Args,
+  Context,
   Mutation,
   Parent,
   Query,
@@ -42,9 +43,15 @@ export class PropertyResolver {
   // example of usage (mutation)
   @Mutation((_returns) => PropertyType)
   @UseGuards(AuthGuard)
-  addPropertyAdvert(@Args(`propertyInput`) propertyInput: PropertyInput) {
+  addPropertyAdvert(
+    @Args(`propertyInput`) propertyInput: PropertyInput,
+    @Context() context: any,
+  ) {
     // USE A SERVICE HERE. INJECT IT AS A DEP ONTO THIS CLASS
-    return this.propertyService.createPropertyAdvert(propertyInput);
+    return this.propertyService.createPropertyAdvert(
+      propertyInput,
+      context.req.user.email,
+    );
   }
 
   @ResolveField(() => UserType)

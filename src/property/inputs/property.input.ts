@@ -1,10 +1,8 @@
-import { Field, ID, InputType } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
 import {
   ArrayMaxSize,
   ArrayMinSize,
-  IsDateString,
   IsIn,
-  IsUUID,
   MaxLength,
   Min,
   MinLength,
@@ -13,8 +11,6 @@ import { PropertyDescriptionInput } from './property.description.input';
 import { PropertyHasInput } from './property-has.input';
 import { ExtraPricingInput } from './property.extra-price.input';
 import { OnSaleInput } from './property.on-sale.input';
-import { RatingInput } from './property.rating.input';
-import { v4 as uuid } from 'uuid';
 import { PropertyTags } from '../enums/property-tags.enum';
 import { PropertyAdditionalConveniences } from '../enums/property-additional-conveniences.enum';
 
@@ -24,10 +20,6 @@ export class PropertyInput {
   @MinLength(5)
   @MaxLength(100)
   title: string;
-
-  @Field(() => ID, { defaultValue: uuid() })
-  @IsUUID()
-  id: string;
 
   @Field(() => PropertyDescriptionInput)
   description: PropertyDescriptionInput;
@@ -69,18 +61,4 @@ export class PropertyInput {
 
   @Field(() => OnSaleInput)
   onSale: OnSaleInput;
-
-  @Field(() => RatingInput)
-  rating: RatingInput;
-
-  @Field()
-  @IsUUID()
-  landlordId: string;
-
-  @IsDateString()
-  @Field()
-  createdAt: string;
-
-  @Field({ defaultValue: true })
-  active: boolean;
 }

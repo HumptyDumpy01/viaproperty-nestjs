@@ -1,5 +1,7 @@
 import {
   BadRequestException,
+  forwardRef,
+  Inject,
   Injectable,
   InternalServerErrorException,
   NotAcceptableException,
@@ -33,6 +35,7 @@ export class AuthService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private jwtService: JwtService,
+    @Inject(forwardRef(() => PropertyService))
     private propertyService: PropertyService,
     private changePasswordTokensService: ChangePasswordTokensService,
     private sendGridMailService: SendgridMailService,
