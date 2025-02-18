@@ -10,6 +10,7 @@ import { showErrorMessage } from '../../utils/functions/showErrorMessage';
 import { GetPropertiesByIdsInput } from './inputs/get-properties-by-ids.input';
 import { AuthService } from '../auth/auth.service';
 import { v4 as uuid } from 'uuid';
+import { OnSaleInput } from './inputs/property.on-sale.input';
 
 @Injectable()
 export class PropertyService {
@@ -40,6 +41,31 @@ export class PropertyService {
   ): Promise<Property> {
     const userData = await this.authService.getUserByEmail(userEmail);
 
+    const isOnSale = propertyInput.onSale > 0;
+    let onSale: OnSaleInput;
+
+    if (isOnSale) {
+      const priceAsNumber = Number(
+        propertyInput.description.priceAndTaskHistory.price.replace(',', ''),
+      );
+
+      const discountAmount = (priceAsNumber * propertyInput.onSale) / 100;
+      const calculatedNewPriceAsString = `${priceAsNumber - discountAmount}`;
+      const calculatedDiscountAsString = `${propertyInput.onSale}%`;
+
+      onSale = {
+        isOnSale: true,
+        discount: calculatedDiscountAsString,
+        newPrice: calculatedNewPriceAsString,
+      };
+    } else {
+      onSale = {
+        isOnSale: false,
+        discount: null,
+        newPrice: null,
+      };
+    }
+
     // const userData = await this.authService.getUserByEmail(userEmail);
     const newPropertyData = {
       ...propertyInput,
@@ -55,6 +81,7 @@ export class PropertyService {
         noiseLevel: [],
         security: [],
       },
+      onSale,
       createdAt: new Date().toISOString(),
       active: false,
     };

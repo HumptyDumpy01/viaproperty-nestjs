@@ -11,7 +11,6 @@ import {
 import { PropertyDescriptionInput } from './property.description.input';
 import { PropertyHasInput } from './property-has.input';
 import { ExtraPricingInput } from './property.extra-price.input';
-import { OnSaleInput } from './property.on-sale.input';
 import { PropertyTags } from '../enums/property-tags.enum';
 import { PropertyAdditionalConveniences } from '../enums/property-additional-conveniences.enum';
 
@@ -61,13 +60,7 @@ export class PropertyInput {
   @IsOptional()
   extraPricing: ExtraPricingInput[];
 
-  @Field(() => OnSaleInput, {
-    defaultValue: {
-      isOnSale: false,
-      discount: null,
-      newPrice: null,
-    },
-  })
+  @Field(() => Number, { defaultValue: 0 })
   @IsOptional()
-  onSale: OnSaleInput;
+  onSale: number;
 }
