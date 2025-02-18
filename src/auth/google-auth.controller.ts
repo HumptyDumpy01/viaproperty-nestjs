@@ -31,9 +31,14 @@ export class GoogleAuthController {
     }
 
     // Set the access_token cookie in the same format as the front-end
+    /* res.setHeader(
+       'Set-Cookie',
+       `access_token=${accessToken}; Path=/; Max-Age=${1000 * 60 * 60 * 24 * 7};`,
+     );*/
+    // Set the access_token cookie with SameSite=None and Secure attributes
     res.setHeader(
       'Set-Cookie',
-      `access_token=${accessToken}; Path=/; Max-Age=${1000 * 60 * 60 * 24 * 7};`,
+      `access_token=${accessToken}; Path=/; Max-Age=${1000 * 60 * 60 * 24 * 7}; SameSite=None; Secure`,
     );
     res.redirect(process.env.FRONTEND_URL);
   }
