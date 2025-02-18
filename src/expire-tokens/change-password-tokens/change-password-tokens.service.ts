@@ -3,6 +3,7 @@ import {
   Inject,
   Injectable,
   InternalServerErrorException,
+  NotAcceptableException,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateChangePasswordTokenInput } from './dto/create-change-password-token.input';
@@ -32,7 +33,13 @@ export class ChangePasswordTokensService {
   async create(createChangePasswordTokenInput: CreateChangePasswordTokenInput) {
     const { email } = createChangePasswordTokenInput;
 
-    await this.authService.getUserByEmail(email);
+    const user = await this.authService.getUserByEmail(email);
+
+    if (user.authMethod === `google-provider`) {
+      throw new NotAcceptableException(
+        'Access Denied. Please login via your provider.',
+      );
+    }
 
     const hashedEmail = crypto.createHash(`sha256`).update(email).digest(`hex`);
 
