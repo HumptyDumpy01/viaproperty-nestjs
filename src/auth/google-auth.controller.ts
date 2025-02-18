@@ -36,10 +36,13 @@ export class GoogleAuthController {
        `access_token=${accessToken}; Path=/; Max-Age=${1000 * 60 * 60 * 24 * 7};`,
      );*/
     // Set the access_token cookie with SameSite=None and Secure attributes
-    res.setHeader(
-      'Set-Cookie',
-      `access_token=${accessToken}; Path=/; Max-Age=${1000 * 60 * 60 * 24 * 7}; SameSite=None; Secure`,
-    );
+    res.cookie('access_token', accessToken, {
+      path: '/',
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'none',
+    });
     res.redirect(process.env.FRONTEND_URL);
   }
 }
