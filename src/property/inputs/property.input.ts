@@ -3,6 +3,7 @@ import {
   ArrayMaxSize,
   ArrayMinSize,
   IsIn,
+  IsOptional,
   MaxLength,
   Min,
   MinLength,
@@ -38,15 +39,15 @@ export class PropertyInput {
 
   @Field(() => [String])
   @ArrayMinSize(4)
-  @ArrayMaxSize(16)
+  @ArrayMaxSize(6)
   images: string[];
 
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, defaultValue: null })
   @IsIn(['leasehold', 'freehold', null])
   ownership: 'leasehold' | `freehold` | null;
 
   @Field()
-  @Min(3)
+  @Min(1)
   propertyArea: number;
 
   @Field(() => PropertyHasInput)
@@ -56,9 +57,17 @@ export class PropertyInput {
   @IsIn(['apartment', 'home', 'cottage', 'commercial'])
   type: 'apartment' | 'home' | 'cottage' | 'commercial';
 
-  @Field(() => [ExtraPricingInput], { nullable: true })
-  extraPricing: ExtraPricingInput[] | null;
+  @Field(() => [ExtraPricingInput], { nullable: true, defaultValue: null })
+  @IsOptional()
+  extraPricing: ExtraPricingInput[];
 
-  @Field(() => OnSaleInput)
+  @Field(() => OnSaleInput, {
+    defaultValue: {
+      isOnSale: false,
+      discount: null,
+      newPrice: null,
+    },
+  })
+  @IsOptional()
   onSale: OnSaleInput;
 }
