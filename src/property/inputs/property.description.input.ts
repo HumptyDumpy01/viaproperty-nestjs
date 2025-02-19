@@ -35,8 +35,9 @@ class LocationInput {
   @Field(() => GeoLocationInput)
   location: GeoLocationInput;
 
-  @Field(() => String, { nullable: true, defaultValue: null })
-  @IsOptional()
+  @Field(() => String)
+  @MinLength(5)
+  @MaxLength(700)
   description: string;
 }
 
@@ -81,6 +82,8 @@ class ContactsInput {
 @InputType()
 class PriceAndTaskHistoryInput {
   @Field()
+  @MinLength(1)
+  @MaxLength(8)
   price: string;
 
   @Field()
@@ -103,7 +106,7 @@ class FloorPlanInput {
 export class PropertyDescriptionInput {
   @Field()
   @MinLength(5)
-  @MaxLength(400)
+  @MaxLength(700)
   overall: string;
 
   @Field(() => [FeatureInput], { defaultValue: [] })

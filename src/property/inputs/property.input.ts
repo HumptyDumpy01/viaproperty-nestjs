@@ -3,7 +3,7 @@ import {
   ArrayMaxSize,
   ArrayMinSize,
   IsIn,
-  IsOptional,
+  IsOptional, Max,
   MaxLength,
   Min,
   MinLength,
@@ -37,7 +37,7 @@ export class PropertyInput {
   propertyFor: 'rent' | 'sell';
 
   @Field(() => [String])
-  @ArrayMinSize(4)
+  @ArrayMinSize(2)
   @ArrayMaxSize(6)
   images: string[];
 
@@ -46,7 +46,8 @@ export class PropertyInput {
   ownership: 'leasehold' | `freehold` | null;
 
   @Field()
-  @Min(1)
+  @Min(5)
+  @Max(9_999)
   propertyArea: number;
 
   @Field(() => PropertyHasInput)
