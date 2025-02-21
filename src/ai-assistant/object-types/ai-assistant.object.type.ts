@@ -4,4 +4,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 export class AiAssistant {
   @Field()
   response: string;
+
+  @Field()
+  id: string;
 }

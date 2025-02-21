@@ -100,9 +100,10 @@ export class AiAssistantService {
 
     const createdNewResponse = this.AIAssistantRepository.create(newResponse);
 
-    await this.AIAssistantRepository.save(createdNewResponse);
+    const savedResponse =
+      await this.AIAssistantRepository.save(createdNewResponse);
 
-    return { response: assistantResponse };
+    return { response: assistantResponse, id: savedResponse.id };
   }
 
   async updateResponseRating(
@@ -120,7 +121,9 @@ export class AiAssistantService {
 
     response.rated = rated;
     const savedResponse = await this.AIAssistantRepository.save(response);
-    return { response: savedResponse.rated === rated ? `success` : `fail` };
+    return {
+      response: savedResponse.rated === rated ? `success` : `fail`,
+    };
   }
 
   async updateResponsePasted(
