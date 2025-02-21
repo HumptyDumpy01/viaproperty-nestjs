@@ -37,7 +37,7 @@ class LocationInput {
 
   @Field(() => String)
   @MinLength(5)
-  @MaxLength(700)
+  @MaxLength(4_000)
   description: string;
 }
 
@@ -54,7 +54,7 @@ class FeatureInput {
 
   @Field()
   @MinLength(5)
-  @MaxLength(600)
+  @MaxLength(4_000)
   description: string;
 }
 
@@ -99,6 +99,8 @@ class FloorPlanInput {
   images: string[];
 
   @Field()
+  @MinLength(5)
+  @MaxLength(4000)
   description: string;
 }
 
@@ -106,7 +108,7 @@ class FloorPlanInput {
 export class PropertyDescriptionInput {
   @Field()
   @MinLength(5)
-  @MaxLength(700)
+  @MaxLength(4000)
   overall: string;
 
   @Field(() => [FeatureInput], { defaultValue: [] })
