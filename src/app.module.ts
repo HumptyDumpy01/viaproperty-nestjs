@@ -28,6 +28,8 @@ import { ChangePasswordTokensModule } from './expire-tokens/change-password-toke
 import { ChangePasswordTokens } from './expire-tokens/change-password-tokens/change-password-tokens.entity';
 import { RegistrationTokensModule } from './expire-tokens/registration-tokens/registration-tokens.module';
 import { RegistrationTokens } from './expire-tokens/registration-tokens/registration-tokens.entity';
+import { AiAssistantModule } from './ai-assistant/ai-assistant.module';
+import { AiAssistant } from './ai-assistant/ai-assistant.entity';
 
 dotenv.config({
   path: `${__dirname}/../../config.env`,
@@ -52,6 +54,7 @@ dotenv.config({
         Order,
         ChangePasswordTokens,
         RegistrationTokens,
+        AiAssistant,
       ],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -75,6 +78,7 @@ dotenv.config({
     SendgridMailModule,
     ChangePasswordTokensModule,
     RegistrationTokensModule,
+    AiAssistantModule,
   ],
   controllers: [],
   providers: [AuthGuard],
