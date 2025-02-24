@@ -9,7 +9,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { AiAssistant } from './ai-assistant.entity';
 import { Repository } from 'typeorm';
 import { AuthService } from '../auth/auth.service';
-import * as process from 'node:process';
 import { v4 as uuid } from 'uuid';
 import { UpdateResponsePastedInput } from './dto/update-response-pasted.input';
 
@@ -83,6 +82,7 @@ export class AiAssistantService {
     }).then((res) => res.json())) as AIResponseType;
 
     const assistantResponse = response?.choices?.[0]?.message?.content;
+    // const assistantResponse = `Testing: lorem ipsum dolor sit amet, consectetur adipiscing elit.`;
 
     if (!assistantResponse) {
       throw new InternalServerErrorException(

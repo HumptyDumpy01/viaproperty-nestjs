@@ -2,8 +2,10 @@ import { Field, InputType } from '@nestjs/graphql';
 import {
   ArrayMaxSize,
   ArrayMinSize,
+  ArrayUnique,
   IsIn,
-  IsOptional, Max,
+  IsOptional,
+  Max,
   MaxLength,
   Min,
   MinLength,
@@ -11,7 +13,6 @@ import {
 import { PropertyDescriptionInput } from './property.description.input';
 import { PropertyHasInput } from './property-has.input';
 import { ExtraPricingInput } from './property.extra-price.input';
-import { PropertyTags } from '../enums/property-tags.enum';
 import { PropertyAdditionalConveniences } from '../enums/property-additional-conveniences.enum';
 
 @InputType()
@@ -25,7 +26,7 @@ export class PropertyInput {
   description: PropertyDescriptionInput;
 
   @Field(() => [String])
-  @IsIn(Object.values(PropertyTags), { each: true })
+  @ArrayUnique()
   tags: string[];
 
   @Field(() => [String])

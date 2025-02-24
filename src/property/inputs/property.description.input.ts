@@ -6,6 +6,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { Optional } from '@nestjs/common';
 
 @InputType()
 class GeoLocationInput {
@@ -44,16 +45,18 @@ class LocationInput {
 @InputType()
 class FeatureInput {
   @Field()
-  @MinLength(5)
+  @MinLength(1)
   @MaxLength(100)
   title: string;
 
   @Field(() => [String], { defaultValue: [] })
+  @MaxLength(3)
   @IsOptional()
   images: string[];
 
-  @Field()
+  @Field(() => String, { defaultValue: `` })
   @MinLength(5)
+  @Optional()
   @MaxLength(4_000)
   description: string;
 }
