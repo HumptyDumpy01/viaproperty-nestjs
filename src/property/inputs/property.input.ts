@@ -27,6 +27,7 @@ export class PropertyInput {
 
   @Field(() => [String])
   @ArrayUnique()
+  @MaxLength(10)
   tags: string[];
 
   @Field(() => [String])

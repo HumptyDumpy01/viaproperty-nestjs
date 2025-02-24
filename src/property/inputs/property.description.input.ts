@@ -115,6 +115,7 @@ export class PropertyDescriptionInput {
   overall: string;
 
   @Field(() => [FeatureInput], { defaultValue: [] })
+  @MaxLength(10)
   @IsOptional()
   features: FeatureInput[];
 
@@ -132,6 +133,7 @@ export class PropertyDescriptionInput {
   priceAndTaskHistory: PriceAndTaskHistoryInput;
 
   @Field(() => [FloorPlanInput], { defaultValue: [] })
+  @MaxLength(10)
   @IsOptional()
   floorPlans: FloorPlanInput[];
 }
