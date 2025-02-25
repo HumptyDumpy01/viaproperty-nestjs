@@ -6,7 +6,6 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { Optional } from '@nestjs/common';
 
 @InputType()
 class GeoLocationInput {
@@ -45,7 +44,7 @@ class LocationInput {
 @InputType()
 class FeatureInput {
   @Field()
-  @MinLength(1)
+  @MinLength(2)
   @MaxLength(100)
   title: string;
 
@@ -56,20 +55,22 @@ class FeatureInput {
 
   @Field(() => String, { defaultValue: `` })
   @MinLength(5)
-  @Optional()
-  @MaxLength(4_000)
+  @MaxLength(1_000)
   description: string;
 }
 
 @InputType()
 class ContactInput {
   @Field()
+  @MaxLength(1_000)
   initials: string;
 
   @Field(() => [String])
+  @MaxLength(10)
   phones: string[];
 
   @Field(() => String)
+  @MaxLength(1_000)
   email: string;
 }
 
