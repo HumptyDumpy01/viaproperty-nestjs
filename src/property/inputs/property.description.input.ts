@@ -1,5 +1,8 @@
 import { Field, InputType } from '@nestjs/graphql';
 import {
+  ArrayMaxSize,
+  ArrayMinSize,
+  IsEmail,
   IsIn,
   IsNotEmpty,
   IsOptional,
@@ -63,23 +66,31 @@ class FeatureInput {
 class ContactInput {
   @Field()
   @MaxLength(1_000)
+  @MinLength(1)
   initials: string;
 
   @Field(() => [String])
-  @MaxLength(10)
+  @ArrayMinSize(1)
+  @ArrayMaxSize(3)
+  @MaxLength(20, { each: true })
+  @MinLength(1, { each: true })
   phones: string[];
 
   @Field(() => String)
-  @MaxLength(1_000)
+  @IsEmail()
+  @MaxLength(1000)
   email: string;
 }
 
 @InputType()
 class ContactsInput {
   @Field()
+  @MaxLength(1000)
   description: string;
 
   @Field(() => [ContactInput])
+  @ArrayMinSize(1)
+  @ArrayMaxSize(2)
   contacts: ContactInput[];
 }
 
