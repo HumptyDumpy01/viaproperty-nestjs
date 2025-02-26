@@ -2,6 +2,7 @@ import { Field, InputType } from '@nestjs/graphql';
 import {
   ArrayMaxSize,
   ArrayMinSize,
+  ArrayUnique,
   IsEmail,
   IsIn,
   IsNotEmpty,
@@ -9,6 +10,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { Optional } from '@nestjs/common';
 
 @InputType()
 class GeoLocationInput {
@@ -73,7 +75,8 @@ class ContactInput {
   @ArrayMinSize(1)
   @ArrayMaxSize(3)
   @MaxLength(20, { each: true })
-  @MinLength(1, { each: true })
+  @MinLength(10, { each: true })
+  @ArrayUnique()
   phones: string[];
 
   @Field(() => String)
@@ -91,6 +94,7 @@ class ContactsInput {
   @Field(() => [ContactInput])
   @ArrayMinSize(1)
   @ArrayMaxSize(2)
+  @ArrayUnique()
   contacts: ContactInput[];
 }
 
@@ -101,7 +105,10 @@ class PriceAndTaskHistoryInput {
   @MaxLength(8)
   price: string;
 
-  @Field()
+  @Field(() => String, { defaultValue: null })
+  @Optional()
+  @MaxLength(1000)
+  @MinLength(5)
   history: string;
 }
 
